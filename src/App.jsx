@@ -521,8 +521,8 @@ function MainApp({onLogout}){
     );
   }
 
-  const key=dk(date),deadlines=store._deadlines||[];
-  const tasks=store[key]||[];
+  const key=dk(date),deadlines=Array.isArray(store._deadlines)?store._deadlines:[];
+  const tasks=Array.isArray(store[key])?store[key]:[];
   function setTasks(fn,dk2){const k=dk2||key,cur=store[k]||[],next=typeof fn==="function"?fn(cur):fn;persist({...store,[k]:next});}
   function setDeadlines(fn){const next=typeof fn==="function"?fn(deadlines):fn;persist({...store,_deadlines:next});}
   const unsch=tasks.filter(x=>x.slot==null);const sched=tasks.filter(x=>x.slot!=null).sort((a,b)=>a.slot-b.slot);
