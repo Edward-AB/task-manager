@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 
 const SLOT_H=16,SPH=4,HOUR_H=SLOT_H*SPH,CAL_S=0,CAL_E=24;
 const CAL_HOURS=Array.from({length:CAL_E-CAL_S},(_,i)=>i+CAL_S);
