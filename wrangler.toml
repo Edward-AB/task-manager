@@ -2,3 +2,12 @@ name = "pinetask"
 pages_build_output_dir = "dist"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pinetask"
+database_id = "YOUR_DATABASE_ID_HERE"
+
+[vars]
+JWT_SECRET = "alnkdsclnjcdkas21"
+SALT = "kjvncewjiunmklm12"
