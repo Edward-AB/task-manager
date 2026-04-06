@@ -519,7 +519,16 @@ function MainApp({onLogout}){
   const [expDl,setExpDl]=useState(null);const [expTodDl,setExpTodDl]=useState(null);const [noteTask,setNoteTask]=useState(null);
 
   // Show loading screen while fetching
-
+  if(!store){
+    return(
+      <div style={{minHeight:"100vh",background:t.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui,sans-serif"}}>
+        <div style={{textAlign:"center"}}>
+          <div style={{fontSize:24,marginBottom:12}}>🌲</div>
+          <div style={{fontSize:13,color:t.tS}}>Loading your tasks…</div>
+        </div>
+      </div>
+    );
+  }
   //
 
   const key=dk(date),deadlines=Array.isArray(store._deadlines)?store._deadlines:[];
