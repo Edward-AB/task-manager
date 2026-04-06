@@ -1,13 +1,20 @@
-import { jwtVerify } from 'jose';
+async function verifyToken(token, secret) {
+  const enc = new TextEncoder();
+  const [header, body, sig] = token.split('.');
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), {name:'HMAC',hash:'SHA-256'}, false, ['verify']);
+  const valid = await crypto.subtle.verify('HMAC', key, Uint8Array.from(atob(sig), c=>c.charCodeAt(0)), enc.encode(`${header}.${body}`));
+  if (!valid) return null;
+  const payload = JSON.parse(atob(body));
+  if (payload.exp < Math.floor(Date.now()/1000)) return null;
+  return payload;
+}
 
 async function getUserId(request, secret) {
   const auth = request.headers.get('Authorization') || '';
   const token = auth.replace('Bearer ', '');
   if (!token) return null;
-  try {
-    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
-    return payload.userId;
-  } catch { return null; }
+  try { const p = await verifyToken(token, secret); return p?.userId || null; }
+  catch { return null; }
 }
 
 export async function onRequestGet({ request, env }) {
