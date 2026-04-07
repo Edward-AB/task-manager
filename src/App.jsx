@@ -459,24 +459,96 @@ function MainApp({onLogout}){
   const today=new Date();
   const sysDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [theme,setTheme]=useState(sysDark?"dark":"forest");
-  useEffect(()=>{const mq=window.matchMedia("(prefers-color-scheme: dark)");const h=e=>setTheme(e.matches?"dark":"forest");mq.addEventListener("change",h);return()=>mq.removeEventListener("change",h);},[]);
-
-  const [store,setStore]=useState(null); // null = loading
+  const [store,setStore]=useState(null);
   const [saving,setSaving]=useState(false);
+  const [cv,setCv]=useState("week");
+  const [date,setDate]=useState(today);
+  const [clock,setClock]=useState(new Date());
+  const [ny,setNy]=useState(0);
+  const [timerSt,setTimerSt]=useState(null);
+  const [timerDone,setTimerDone]=useState(false);
+  const [showTP,setShowTP]=useState(false);
+  const [showDone,setShowDone]=useState(false);
+  const [showProjects,setShowProjects]=useState(false);
+  const [ghost,setGhost]=useState(null);
+  const [overUnsch,setOverUnsch]=useState(false);
+  const [newText,setNewText]=useState("");
+  const [newPri,setNewPri]=useState(null);
+  const [newDur,setNewDur]=useState(2);
+  const [newDlId,setNewDlId]=useState(null);
+  const [newColorId,setNewColorId]=useState(null);
+  const [editId,setEditId]=useState(null);
+  const [editText,setEditText]=useState("");
+  const [editPri,setEditPri]=useState(null);
+  const [editDur,setEditDur]=useState(2);
+  const [editDlId,setEditDlId]=useState(null);
+  const [editMv,setEditMv]=useState(null);
+  const [editColorId,setEditColorId]=useState(null);
+  const [dlTitle,setDlTitle]=useState("");
+  const [dlDate,setDlDate]=useState(tk());
+  const [dlDesc,setDlDesc]=useState("");
+  const [dlColorIdx,setDlColorIdx]=useState(0);
+  const [expDl,setExpDl]=useState(null);
+  const [expTodDl,setExpTodDl]=useState(null);
+  const [noteTask,setNoteTask]=useState(null);
   const saveTimeout=useRef(null);
+  const timerRef=useRef(null);
+  const calScrollRef=useRef(null);
+  const dragInfo=useRef(null);
 
-  // Load data from API on mount
   useEffect(()=>{
-    loadStoreFromAPI().then(data=>{
-      console.log("API response:", JSON.stringify(data));
-      setStore(data);
-    }).catch(err=>{
-      console.log("API error:", err);
-      setStore({_deadlines:[],_projects:[]});
-    });
+    const mq=window.matchMedia("(prefers-color-scheme: dark)");
+    const h=e=>setTheme(e.matches?"dark":"forest");
+    mq.addEventListener("change",h);
+    return()=>mq.removeEventListener("change",h);
   },[]);
 
-  // Debounced save to API
+  useEffect(()=>{
+    loadStoreFromAPI().then(data=>{
+      console.log("API response:",JSON.stringify(data));
+      setStore(data);
+    }).catch(()=>setStore({_deadlines:[],_projects:[]}));
+  },[]);
+
+  useEffect(()=>{
+    if(calScrollRef.current)calScrollRef.current.scrollTop=6*HOUR_H;
+  },[store]);
+
+  useEffect(()=>{
+    setNy(nowY());
+    const id=setInterval(()=>{setClock(new Date());setNy(nowY());},10000);
+    return()=>clearInterval(id);
+  },[]);
+
+  useEffect(()=>{
+    if(timerSt&&timerSt.state==="running"){
+      timerRef.current=setInterval(()=>{
+        setTimerSt(prev=>{
+          if(!prev||prev.state!=="running")return prev;
+          if(prev.remaining<=1){clearInterval(timerRef.current);setShowDone(true);setTimerDone(true);return null;}
+          return{...prev,remaining:prev.remaining-1};
+        });
+      },1000);
+    }else{
+      if(timerRef.current)clearInterval(timerRef.current);
+    }
+    return()=>{if(timerRef.current)clearInterval(timerRef.current);};
+  },[timerSt?.state]);
+
+  const t=TH[theme],P=GP(theme),DLC=GD(theme);
+
+  // ALL hooks above this line — safe to return early now
+  if(!store){
+    return(
+      <div style={{minHeight:"100vh",background:t.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui,sans-serif"}}>
+        <div style={{textAlign:"center"}}>
+          <div style={{fontSize:24,marginBottom:12}}>🌲</div>
+          <div style={{fontSize:13,color:t.tS}}>Loading your tasks…</div>
+        </div>
+      </div>
+    );
+  }
+
   function persist(ns){
     setStore(ns);
     if(saveTimeout.current)clearTimeout(saveTimeout.current);
@@ -486,22 +558,16 @@ function MainApp({onLogout}){
     },800);
   }
 
-  const t=TH[theme],P=GP(theme),DLC=GD(theme);
-  const [cv,setCv]=useState("week");
-  const [date,setDate]=useState(today);
-  const [clock,setClock]=useState(new Date());
-  const [ny,setNy]=useState(0);
-  const [timerSt,setTimerSt]=useState(null);const [timerDone,setTimerDone]=useState(false);const [showTP,setShowTP]=useState(false);const [showDone,setShowDone]=useState(false);const [showProjects,setShowProjects]=useState(false);
-  const timerRef=useRef(null);const calScrollRef=useRef(null);
-  const [ghost,setGhost]=useState(null);const [overUnsch,setOverUnsch]=useState(false);const dragInfo=useRef(null);
+  const key=dk(date);
+  const deadlines=Array.isArray(store._deadlines)?store._deadlines:[];
+  const tasks=Array.isArray(store[key])?store[key]:[];
 
-  useEffect(()=>{if(calScrollRef.current)calScrollRef.current.scrollTop=6*HOUR_H;},[store]);
-  useEffect(()=>{setNy(nowY());const id=setInterval(()=>{setClock(new Date());setNy(nowY());},10000);return()=>clearInterval(id);},[]);
-  useEffect(()=>{
-    if(timerSt&&timerSt.state==="running"){timerRef.current=setInterval(()=>{setTimerSt(prev=>{if(!prev||prev.state!=="running")return prev;if(prev.remaining<=1){clearInterval(timerRef.current);setShowDone(true);setTimerDone(true);return null;}return{...prev,remaining:prev.remaining-1};});},1000);}
-    else{if(timerRef.current)clearInterval(timerRef.current);}
-    return()=>{if(timerRef.current)clearInterval(timerRef.current);};
-  },[timerSt?.state]);
+  function setTasks(fn,dk2){const k=dk2||key,cur=store[k]||[],next=typeof fn==="function"?fn(cur):fn;persist({...store,[k]:next});}
+  function setDeadlines(fn){const next=typeof fn==="function"?fn(deadlines):fn;persist({...store,_deadlines:next});}
+
+  const unsch=tasks.filter(x=>x.slot==null);
+  const sched=tasks.filter(x=>x.slot!=null).sort((a,b)=>a.slot-b.slot);
+  const done=tasks.filter(x=>x.done).length,total=tasks.length;
 
   function handleTimer(secs,action){
     if(!action){setTimerSt({state:"running",remaining:secs,total:secs});setShowTP(false);return;}
@@ -509,21 +575,6 @@ function MainApp({onLogout}){
     if(action==="toggle"){setTimerSt(prev=>prev?{...prev,state:prev.state==="running"?"paused":"running"}:null);return;}
     if(action==="cancel"){setTimerSt(null);setShowTP(false);return;}
   }
-
-  const [newText,setNewText]=useState("");const [newPri,setNewPri]=useState(null);const [newDur,setNewDur]=useState(2);const [newDlId,setNewDlId]=useState(null);const [newColorId,setNewColorId]=useState(null);
-  const [editId,setEditId]=useState(null);const [editText,setEditText]=useState("");const [editPri,setEditPri]=useState(null);const [editDur,setEditDur]=useState(2);const [editDlId,setEditDlId]=useState(null);const [editMv,setEditMv]=useState(null);const [editColorId,setEditColorId]=useState(null);
-  const [dlTitle,setDlTitle]=useState("");const [dlDate,setDlDate]=useState(tk());const [dlDesc,setDlDesc]=useState("");const [dlColorIdx,setDlColorIdx]=useState(0);
-  const [expDl,setExpDl]=useState(null);const [expTodDl,setExpTodDl]=useState(null);const [noteTask,setNoteTask]=useState(null);
-
-  // Show loading screen while fetching
-  if(!store) return null;
-  const key=dk(date),deadlines=Array.isArray(store._deadlines)?store._deadlines:[];
-  const tasks=Array.isArray(store[key])?store[key]:[];
-  function setTasks(fn,dk2){const k=dk2||key,cur=store[k]||[],next=typeof fn==="function"?fn(cur):fn;persist({...store,[k]:next});}
-  function setDeadlines(fn){const next=typeof fn==="function"?fn(deadlines):fn;persist({...store,_deadlines:next});}
-  const unsch=tasks.filter(x=>x.slot==null);const sched=tasks.filter(x=>x.slot!=null).sort((a,b)=>a.slot-b.slot);
-  const done=tasks.filter(x=>x.done).length,total=tasks.length;
-  const cLayout=useMemo(()=>computeCols(sched),[JSON.stringify(sched.map(s=>({id:s.id,slot:s.slot,dur:s.dur})))]);
 
   function allTFDl(dlId){return Object.entries(store).filter(([k])=>/^\d{4}-\d{2}-\d{2}$/.test(k)).flatMap(([,ts])=>(Array.isArray(ts)?ts:[]).filter(x=>x.deadlineId===dlId));}
   function addTask(){if(!newText.trim())return;setTasks(x=>[...x,{id:uid(),text:newText.trim(),priority:newPri,dur:newDur,slot:null,done:false,deadlineId:newDlId||null,note:"",colorId:newColorId||null}]);setNewText("");}
@@ -534,10 +585,9 @@ function MainApp({onLogout}){
   function saveEdit(){const task=tasks.find(x=>x.id===editId);if(!task){setEditId(null);return;}const upd={...task,text:editText.trim()||task.text,priority:editPri,dur:editDur,deadlineId:editDlId,colorId:editColorId};if(editMv&&editMv!==key){const ns={...store};ns[key]=(ns[key]||[]).filter(x=>x.id!==editId);ns[editMv]=[...(ns[editMv]||[]),{...upd,slot:null}];persist(ns);}else setTasks(x=>x.map(v=>v.id===editId?upd:v));setEditId(null);}
   function cancelEdit(){setEditId(null);}
   function saveNote(id,note){setTasks(x=>x.map(v=>v.id===id?{...v,note}:v));setNoteTask(null);}
-  function addDl(){if(!dlTitle.trim()||!dlDate)return;setDeadlines(d=>[...d,{id:uid(),title:dlTitle.trim(),date:dlDate,desc:dlDesc.trim(),colorIdx:dlColorIdx}]);setDlTitle("");setDlDate(tk());setDlDesc("");}
+  function addDl(){if(!dlTitle.trim()||!dlDate)return;setDeadlines(d=>[...d,{id:uid(),title:dlTitle.trim(),date:dlDate,desc:dlDesc.trim(),colorIdx:dlColorIdx}]);setDlTitle("");setDlDate(tk());setDlDesc("");setDlColorIdx(deadlines.length%DLC.length);}
   function saveDlEdit(updated){setDeadlines(d=>d.map(x=>x.id===updated.id?updated:x));}
   function removeDl(id){const ns={...store};Object.keys(ns).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).forEach(k=>{ns[k]=(ns[k]||[]).map(x=>x.deadlineId===id?{...x,deadlineId:null}:x);});ns._deadlines=(ns._deadlines||[]).filter(x=>x.id!==id);persist(ns);}
-  useEffect(()=>{if(store)setDlColorIdx(deadlines.length%DLC.length);},[deadlines.length]);
 
   function getSlot(e){if(!calScrollRef.current)return 0;const rect=calScrollRef.current.getBoundingClientRect();const scrollTop=calScrollRef.current.scrollTop;const y=e.clientY-rect.top+scrollTop;return Math.max(0,Math.min(Math.floor(y/SLOT_H),TOT_SLOTS-1));}
   function onDragStart(e,task){dragInfo.current=task;e.dataTransfer.effectAllowed="move";const tc=getTaskColor(task,deadlines,DLC,theme);const el=document.createElement("div");el.style.cssText=`position:absolute;top:-999px;padding:5px 10px;background:${tc.bg};border:1px solid ${tc.border};border-radius:8px;font-size:12px;color:${tc.text};white-space:nowrap;`;el.textContent=task.text;document.body.appendChild(el);e.dataTransfer.setDragImage(el,0,0);setTimeout(()=>document.body.removeChild(el),0);}
@@ -548,6 +598,7 @@ function MainApp({onLogout}){
   const onDropUnschedule=useCallback(e=>{e.preventDefault();if(!dragInfo.current)return;const id=dragInfo.current.id;setTasks(x=>x.map(v=>v.id===id?{...v,slot:null}:v));setGhost(null);dragInfo.current=null;},[key,store]);
   function onResize(e,task){e.preventDefault();e.stopPropagation();const sy=e.clientY,sd2=task.dur;function mv(ev){const dy=ev.clientY-sy,nd=Math.max(1,sd2+Math.round(dy/SLOT_H));setTasks(x=>x.map(v=>v.id===task.id?{...v,dur:nd}:v));}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);}
 
+  const cLayout=computeCols(sched);
   const si={P,t,theme,DLC,deadlines,tasks,toggleDone,removeTask,unschedule,startEdit,saveEdit,cancelEdit,editId,editText,setEditText,editPri,setEditPri,editDur,setEditDur,editDlId,setEditDlId,editMv,setEditMv,editColorId,setEditColorId,onDragStart,onDragEnd:onDragEnd2,onNote:(task)=>setNoteTask(task)};
   const tmFmt=timerSt?`${String(Math.floor(timerSt.remaining/60)).padStart(2,"0")}:${String(timerSt.remaining%60).padStart(2,"0")}`:null;
 
@@ -557,8 +608,6 @@ function MainApp({onLogout}){
       {noteTask&&<NoteModal task={noteTask} t={t} onSave={(note)=>saveNote(noteTask.id,note)} onClose={()=>setNoteTask(null)}/>}
       {showDone&&<DoneToast t={t} onClose={()=>setShowDone(false)}/>}
       {showProjects&&<ProjectsOverlay store={store} t={t} theme={theme} DLC={DLC} P={P} onClose={()=>setShowProjects(false)} onUpdateStore={ns=>{persist(ns);}}/>}
-
-      {/* Header */}
       <div style={{background:t.hBg,borderBottom:`0.5px solid ${t.hBorder}`,padding:"0 20px",display:"grid",gridTemplateColumns:"1fr auto 1fr",alignItems:"center",height:48,flexShrink:0,position:"sticky",top:0,zIndex:100,transition:"background 0.4s ease,border-color 0.4s ease"}}>
         <div style={{display:"flex",alignItems:"center",gap:7}}>
           <button onClick={()=>setTheme(theme==="dark"?"forest":"dark")} style={{width:30,height:30,borderRadius:"50%",border:`0.5px solid ${t.hBorder}`,background:"rgba(128,128,128,0.1)",color:t.hText,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden",position:"relative"}}>
@@ -577,7 +626,6 @@ function MainApp({onLogout}){
             <svg width={12} height={12} viewBox="0 0 14 14" fill="none"><rect x={0.7} y={0.7} width={5} height={5} rx={1.3} stroke={t.hText} strokeWidth={1.2}/><rect x={8.3} y={0.7} width={5} height={5} rx={1.3} stroke={t.hText} strokeWidth={1.2}/><rect x={0.7} y={8.3} width={5} height={5} rx={1.3} stroke={t.hText} strokeWidth={1.2}/><rect x={8.3} y={8.3} width={5} height={5} rx={1.3} stroke={t.hText} strokeWidth={1.2}/></svg>
             Projects
           </button>
-          {/* Save indicator */}
           {saving&&<span style={{fontSize:10,color:t.tT,opacity:0.7}}>Saving…</span>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>
@@ -590,9 +638,7 @@ function MainApp({onLogout}){
           <button onClick={()=>{clearToken();onLogout();}} style={{height:30,borderRadius:8,border:`0.5px solid ${t.hBorder}`,background:"rgba(128,128,128,0.1)",color:t.hText,cursor:"pointer",padding:"0 10px",fontSize:11}}>Sign out</button>
         </div>
       </div>
-
       <div style={{flex:1,minHeight:0,padding:"14px 20px",display:"grid",gridTemplateColumns:"25% minmax(0,1fr) minmax(0,1fr)",gap:14,overflow:"hidden"}}>
-        {/* Left column */}
         <div className="col-scroll" style={{display:"flex",flexDirection:"column",gap:12,paddingRight:2,paddingBottom:14}}>
           <div style={{background:t.cBg,border:`0.5px solid ${t.border}`,borderRadius:14,padding:"16px"}}>
             <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
@@ -620,8 +666,6 @@ function MainApp({onLogout}){
             </div>
           </div>
         </div>
-
-        {/* Middle column */}
         <div className="col-scroll" style={{display:"flex",flexDirection:"column",gap:12,paddingRight:2,paddingBottom:14}}>
           <div style={{background:t.cBg,border:`0.5px solid ${t.border}`,borderRadius:14,padding:"16px 18px"}}>
             <SL text="Add task" t={t}/>
@@ -651,8 +695,6 @@ function MainApp({onLogout}){
             {sched.length>0&&(<div><div style={{height:"0.5px",background:t.hr,margin:"12px 0"}}/><SL text={`Scheduled · ${sched.length}`} t={t}/>{sched.map(task=><TaskItem key={task.id} task={task} isScheduled={true} {...si}/>)}</div>)}
           </div>
         </div>
-
-        {/* Right column — calendar */}
         <div style={{background:t.cBg,border:`0.5px solid ${t.border}`,borderRadius:14,padding:"16px 18px",display:"flex",flexDirection:"column",overflow:"hidden"}}>
           <SL text="Day schedule — drag tasks here" t={t}/>
           <div ref={calScrollRef} onDragOver={onDragOver} onDrop={onDrop} onDragLeave={onDragLeave} style={{flex:1,minHeight:0,overflowY:"scroll",borderRadius:12,border:`0.5px solid ${t.border}`,background:t.calBg}}>
