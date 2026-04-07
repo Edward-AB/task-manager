@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import logoLight from "./assets/logo-light.svg";
-import logoDark from "./assets/logo-dark.svg";
+import logoLight from "./assets/logo-light.png";
+import logoDark from "./assets/logo-dark.png";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const SLOT_H=16,SPH=4,HOUR_H=SLOT_H*SPH,CAL_E=24;
