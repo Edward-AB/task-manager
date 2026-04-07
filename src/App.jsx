@@ -47,7 +47,7 @@ async function saveStoreToAPI(s){
   await apiRequest("/api/data","POST",s);
 }
 
-// ── Utility functions ──────────────────────────────────────────────────────────
+// ── Utility Functions ──────────────────────────────────────────────────────────
 function getTaskColor(task,deadlines,DLC,theme){
   if(task.deadlineId){const dl=deadlines.find(d=>d.id===task.deadlineId);if(dl)return DLC[dl.colorIdx%DLC.length];}
   if(task.colorId){const palette=theme==="dark"?TASK_COLORS_DARK:TASK_COLORS;const tc=palette.find(c=>c.id===task.colorId);if(tc)return tc;}
