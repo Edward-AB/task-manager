@@ -516,7 +516,8 @@ function MainApp({onLogout}){
   const [expDl,setExpDl]=useState(null);const [expTodDl,setExpTodDl]=useState(null);const [noteTask,setNoteTask]=useState(null);
 
   // Show loading screen while fetching
-  const key=dk(date),deadlines=Array.isArray(store?._deadlines)?store._deadlines:[];
+  if(!store) return null;
+  const key=dk(date),deadlines=Array.isArray(store._deadlines)?store._deadlines:[];
   const tasks=Array.isArray(store[key])?store[key]:[];
   function setTasks(fn,dk2){const k=dk2||key,cur=store[k]||[],next=typeof fn==="function"?fn(cur):fn;persist({...store,[k]:next});}
   function setDeadlines(fn){const next=typeof fn==="function"?fn(deadlines):fn;persist({...store,_deadlines:next});}
@@ -550,7 +551,6 @@ function MainApp({onLogout}){
   const si={P,t,theme,DLC,deadlines,tasks,toggleDone,removeTask,unschedule,startEdit,saveEdit,cancelEdit,editId,editText,setEditText,editPri,setEditPri,editDur,setEditDur,editDlId,setEditDlId,editMv,setEditMv,editColorId,setEditColorId,onDragStart,onDragEnd:onDragEnd2,onNote:(task)=>setNoteTask(task)};
   const tmFmt=timerSt?`${String(Math.floor(timerSt.remaining/60)).padStart(2,"0")}:${String(timerSt.remaining%60).padStart(2,"0")}`:null;
 
-  if(!store) return null;
   return(
     <div style={{fontFamily:"system-ui,sans-serif",background:t.bg,height:"100vh",width:"100%",fontSize:14,color:t.tP,position:"relative",boxSizing:"border-box",display:"flex",flexDirection:"column",transition:"background 0.4s ease,color 0.4s ease"}}>
       <style>{`*{box-sizing:border-box}html,body{margin:0;padding:0;width:100%;height:100%}.trow:hover .ta{opacity:1!important}.ta{opacity:0;transition:opacity .15s}.cpill:hover{opacity:.9}input[type=checkbox]{width:13px;height:13px;accent-color:${t.acc};cursor:pointer;flex-shrink:0;margin:0}.col-scroll{overflow-y:auto}.col-scroll::-webkit-scrollbar{display:none}.col-scroll{-ms-overflow-style:none;scrollbar-width:none}::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${t.border};border-radius:4px}button:active{transform:scale(.97)}input[type=date]{color-scheme:${theme==="dark"?"dark":"light"}}.rh{cursor:ns-resize;height:7px;position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;z-index:10}.cpill:hover .rh{opacity:1}div,button,input,select,textarea,span{transition:background-color 0.4s ease,border-color 0.4s ease,color 0.4s ease}svg *{transition:stroke 0.4s ease,fill 0.4s ease}`}</style>
