@@ -296,31 +296,29 @@ function TaskItem({task,isScheduled,deadlines,DLC,P,t,theme,toggleDone,removeTas
 }
 
 function CalTask({task,tc,pc,lay,top,height,dl,dlC,P,toggleDone,unschedule,onDragStart,onDragEnd,onResize,t}){
-  // narrow = sharing column with another task; tall = enough vertical room to stack
+  // narrow = sharing column with another task → stack vertically, top-align
+  // wide   = full column → always centre vertically, text wraps then ellipsis
   const narrow=lay.colPct<=55;
-  const tall=height>=SLOT_H*3; // 45+ min — enough room to stack text above tags
-  const Tags=()=><div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap",overflow:"hidden"}}>
+  const Tags=()=><div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap",overflow:"hidden",flexShrink:0}}>
     <PriorityTag priority={task.priority} P={P}/>
     <span style={{fontSize:9,color:tc.dot,whiteSpace:"nowrap"}}>{s2t(task.slot)}·{task.dur*15}m</span>
     {dl&&dlC&&<span style={{padding:"1px 4px",borderRadius:5,background:dlC.bg,color:dlC.text,border:`0.5px solid ${dlC.border}`,fontSize:9,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:70}}>{dl.title}</span>}
   </div>;
   return(
-    <div className="cpill trow" draggable onDragStart={e=>onDragStart(e,task)} onDragEnd={onDragEnd} style={{position:"absolute",left:`${lay.leftPct}%`,width:`calc(${lay.colPct}% - 4px)`,top,height,background:tc.bg,border:`1px solid ${tc.border}`,borderRadius:9,padding:"3px 6px",cursor:"grab",display:"flex",alignItems:tall?"flex-start":"center",gap:3,overflow:"hidden",boxSizing:"border-box"}}>
-      <input type="checkbox" checked={task.done} onChange={()=>toggleDone(task.id)} onClick={e=>e.stopPropagation()} style={{width:10,height:10,flexShrink:0,accentColor:pc.dot,marginTop:tall?3:0}}/>
-      {tall?(
-        // Stacked layout: text on top, tags below
+    <div className="cpill trow" draggable onDragStart={e=>onDragStart(e,task)} onDragEnd={onDragEnd} style={{position:"absolute",left:`${lay.leftPct}%`,width:`calc(${lay.colPct}% - 4px)`,top,height,background:tc.bg,border:`1px solid ${tc.border}`,borderRadius:9,padding:"3px 6px",cursor:"grab",display:"flex",alignItems:narrow?"flex-start":"center",gap:3,overflow:"hidden",boxSizing:"border-box"}}>
+      <input type="checkbox" checked={task.done} onChange={()=>toggleDone(task.id)} onClick={e=>e.stopPropagation()} style={{width:10,height:10,flexShrink:0,accentColor:pc.dot,marginTop:narrow?2:0}}/>
+      {narrow?(
         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2,paddingTop:1}}>
-          <span style={{fontSize:11,fontWeight:500,color:task.done?tc.border:tc.text,textDecoration:task.done?"line-through":"none",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:narrow?2:4,WebkitBoxOrient:"vertical"}}>{task.text}</span>
+          <span style={{fontSize:11,fontWeight:500,color:task.done?tc.border:tc.text,textDecoration:task.done?"line-through":"none",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{task.text}</span>
           <Tags/>
         </div>
       ):(
-        // Inline layout: text + tags side by side, single row
         <>
-          <span style={{fontSize:11,fontWeight:500,color:task.done?tc.border:tc.text,textDecoration:task.done?"line-through":"none",flex:1,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:1.3}}>{task.text}</span>
+          <span style={{fontSize:11,fontWeight:500,color:task.done?tc.border:tc.text,textDecoration:task.done?"line-through":"none",flex:1,minWidth:0,lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:Math.max(1,Math.floor(height/14)),WebkitBoxOrient:"vertical"}}>{task.text}</span>
           <Tags/>
         </>
       )}
-      <button onClick={e=>{e.stopPropagation();unschedule(task.id);}} style={{background:"none",border:"none",cursor:"pointer",color:tc.dot,fontSize:10,padding:0,lineHeight:1,flexShrink:0,alignSelf:tall?"flex-start":"center",marginTop:tall?3:0}}>↩</button>
+      <button onClick={e=>{e.stopPropagation();unschedule(task.id);}} style={{background:"none",border:"none",cursor:"pointer",color:tc.dot,fontSize:10,padding:0,lineHeight:1,flexShrink:0,alignSelf:narrow?"flex-start":"center",marginTop:narrow?2:0}}>↩</button>
       <div className="rh" onMouseDown={e=>onResize(e,task)}><div style={{width:20,height:2.5,borderRadius:2,background:tc.border,opacity:0.9}}/></div>
     </div>
   );
