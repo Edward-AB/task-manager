@@ -551,7 +551,7 @@ function MainApp({onLogout}){
   function addDl(){if(!dlTitle.trim()||!dlDate)return;setDeadlines(d=>[...d,{id:uid(),title:dlTitle.trim(),date:dlDate,desc:dlDesc.trim(),colorIdx:dlColorIdx}]);setDlTitle("");setDlDate(tk());setDlDesc("");}
   function saveDlEdit(updated){setDeadlines(d=>d.map(x=>x.id===updated.id?updated:x));}
   function removeDl(id){const ns={...store};Object.keys(ns).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).forEach(k=>{ns[k]=(ns[k]||[]).map(x=>x.deadlineId===id?{...x,deadlineId:null}:x);});ns._deadlines=(ns._deadlines||[]).filter(x=>x.id!==id);persist(ns);}
-  useEffect(()=>{setDlColorIdx(deadlines.length%DLC.length);},[deadlines.length]);
+  useEffect(()=>{if(store)setDlColorIdx(deadlines.length%DLC.length);},[deadlines.length]);
 
   function getSlot(e){if(!calScrollRef.current)return 0;const rect=calScrollRef.current.getBoundingClientRect();const scrollTop=calScrollRef.current.scrollTop;const y=e.clientY-rect.top+scrollTop;return Math.max(0,Math.min(Math.floor(y/SLOT_H),TOT_SLOTS-1));}
   function onDragStart(e,task){dragInfo.current=task;e.dataTransfer.effectAllowed="move";const tc=getTaskColor(task,deadlines,DLC,theme);const el=document.createElement("div");el.style.cssText=`position:absolute;top:-999px;padding:5px 10px;background:${tc.bg};border:1px solid ${tc.border};border-radius:8px;font-size:12px;color:${tc.text};white-space:nowrap;`;el.textContent=task.text;document.body.appendChild(el);e.dataTransfer.setDragImage(el,0,0);setTimeout(()=>document.body.removeChild(el),0);}
