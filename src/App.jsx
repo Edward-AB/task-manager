@@ -1253,7 +1253,7 @@ function MainApp({onLogout}){
   function removeDl(id){const ns={...store};Object.keys(ns).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).forEach(k=>{ns[k]=(ns[k]||[]).map(x=>x.deadlineId===id?{...x,deadlineId:null}:x);});ns._deadlines=(ns._deadlines||[]).filter(x=>x.id!==id);persist(ns);}
 
   function getSlot(e){if(!calScrollRef.current)return 0;const rect=calScrollRef.current.getBoundingClientRect();const y=e.clientY-rect.top+calScrollRef.current.scrollTop;return Math.max(0,Math.min(Math.floor(y/SLOT_H),TOT_SLOTS-1));}
-  function onDragStart(e,task){dragInfo.current=task;e.dataTransfer.effectAllowed="move";const tc2=getTaskColor(task,deadlines,DLC,theme);const el=document.createElement("div");el.style.cssText=`position:absolute;top:-999px;padding:4px 10px;background:${tc2.bg};border:1px solid ${tc2.border};border-radius:8px;font-size:12px;color:${tc2.text};white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis;`;el.textContent=task.text;document.body.appendChild(el);e.dataTransfer.setDragImage(el,0,0);setTimeout(()=>document.body.removeChild(el),0);}
+  function onDragStart(e,task){dragInfo.current=task;e.dataTransfer.effectAllowed="move";const tc2=getTaskColor(task,deadlines,DLC,theme);const el=document.createElement("div");el.style.cssText=`position:fixed;top:-999px;left:-999px;padding:4px 10px;background:${tc2.bg};border:1px solid ${tc2.border};border-radius:8px;font-size:12px;color:${tc2.text};white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis;`;el.textContent=task.text;document.body.appendChild(el);e.dataTransfer.setDragImage(el,0,0);setTimeout(()=>document.body.removeChild(el),0);}
   function onDragOver(e){e.preventDefault();if(!dragInfo.current)return;setGhost({slot:getSlot(e),dur:dragInfo.current.dur||2,deadlineId:dragInfo.current.deadlineId});}
   function onDrop(e){e.preventDefault();if(!dragInfo.current)return;const slot=getSlot(e),id=dragInfo.current.id;setTasks(x=>x.map(v=>v.id===id?{...v,slot}:v));setGhost(null);dragInfo.current=null;}
   function onDragLeave(e){if(!calScrollRef.current?.contains(e.relatedTarget))setGhost(null);}
@@ -1335,7 +1335,7 @@ function MainApp({onLogout}){
   function TaskListCard({dropProps}){
     return(
       <div className="col-scroll" onDragOver={e=>{e.preventDefault();setOverUnsch(true);}} onDragLeave={()=>setOverUnsch(false)} onDrop={e=>{setOverUnsch(false);onDropUnschedule(e);}} style={{background:t.cBg,border:`0.5px solid ${overUnsch?t.acc:t.border}`,borderRadius:14,padding:"14px 16px",overflowY:"auto",maxHeight:isNarrow?"none":"calc(100vh - 280px)"}}>
-        <DeadlineSections/>
+        {DeadlineSections()}
         {unsch.length>0&&<div style={{fontSize:10,fontWeight:500,color:t.tT,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:6}}>Unscheduled · {unsch.length}</div>}
         {tasks.length===0&&<div style={{fontSize:12,color:t.tT,padding:"4px 0",marginBottom:6}}>Add a task above to get started.</div>}
         {unsch.length===0&&tasks.length>0&&<div style={{fontSize:12,color:t.tT,padding:"4px 0",marginBottom:6}}>All tasks scheduled!</div>}
@@ -1401,12 +1401,12 @@ function MainApp({onLogout}){
         <div style={{flex:1,minHeight:0,padding:"14px 20px",display:"grid",gridTemplateColumns:"25% minmax(0,1fr) minmax(0,1fr)",gap:14,overflow:"hidden"}}>
           {/* Left */}
           <div className="col-scroll" style={{display:"flex",flexDirection:"column",gap:12,paddingRight:2,paddingBottom:14}}>
-            <LeftColumnContent/>
+            {LeftColumnContent()}
           </div>
           {/* Middle */}
           <div style={{display:"flex",flexDirection:"column",gap:10,minHeight:0}}>
-            <AddTaskCard/>
-            <TaskListCard/>
+            {AddTaskCard()}
+            {TaskListCard()}
           </div>
           {/* Right: calendar */}
           <CalendarColumn {...calProps}/>
@@ -1425,7 +1425,7 @@ function MainApp({onLogout}){
             {cv==="week"?<WeekStrip date={date} setDate={setDate} store={store} deadlines={deadlines} t={t}/>:<MonthCal date={date} setDate={setDate} store={store} deadlines={deadlines} t={t}/>}
           </div>
           {/* Add task */}
-          <AddTaskCard/>
+          {AddTaskCard()}
           {/* Two-col: overview+deadlines | calendar */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,alignItems:"start"}}>
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -1445,7 +1445,7 @@ function MainApp({onLogout}){
                   <button onClick={addDl} style={{width:"100%",background:t.aBtn,border:"none",borderRadius:7,padding:"6px 0",cursor:"pointer",color:t.aBtnTx,fontSize:12,fontWeight:500,marginTop:3}}>Add deadline</button>
                 </div>
               </div>
-              <TaskListCard/>
+              {TaskListCard()}
             </div>
             <div style={{background:t.cBg,border:`0.5px solid ${t.border}`,borderRadius:14,padding:"14px",display:"flex",flexDirection:"column"}}>
               <SL text="Day schedule" t={t}/>
