@@ -14,9 +14,9 @@ export async function onRequestPost({request,env}){
   const enc=new TextEncoder();
   const hashBuf=await crypto.subtle.digest('SHA-256',enc.encode(password+env.SALT));
   const hash=b64url(btoa(String.fromCharCode(...new Uint8Array(hashBuf))));
-  const user=await env.DB.prepare('SELECT id,first_name FROM users WHERE email=? AND password_hash=?')
+  const user=await env.DB.prepare('SELECT id,username FROM users WHERE email=? AND password_hash=?')
     .bind(email.toLowerCase(),hash).first();
   if(!user)return Response.json({error:'Invalid email or password'},{status:401});
-  const token=await makeToken({userId:user.id,firstName:user.first_name||null},env.JWT_SECRET);
+  const token=await makeToken({userId:user.id,username:user.username||null},env.JWT_SECRET);
   return Response.json({token});
 }
