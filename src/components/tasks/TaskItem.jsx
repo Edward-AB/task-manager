@@ -7,6 +7,7 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
   const [hover, setHover] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
+  const [editingFields, setEditingFields] = useState(false);
 
   const tc = task.colorId
     ? theme.taskColor.find(c => c.id === task.colorId) || theme.taskColor[0]
@@ -101,11 +102,46 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
             }}>{dl.title}</span>
           )}
         </div>
+
+        {/* Inline field editor (Dev-43) */}
+        {editingFields && (
+          <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <select value={task.priority || ''} onChange={e => onUpdate(task.id, { priority: e.target.value || null })}
+              style={{ fontSize: 10, padding: '2px 4px', borderRadius: theme.radius.sm, border: `1px solid ${theme.border}`, background: theme.bg, color: theme.textPrimary }}>
+              <option value="">No priority</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+            <select value={task.duration || 2} onChange={e => onUpdate(task.id, { duration: Number(e.target.value) })}
+              style={{ fontSize: 10, padding: '2px 4px', borderRadius: theme.radius.sm, border: `1px solid ${theme.border}`, background: theme.bg, color: theme.textPrimary }}>
+              {[1,2,3,4,6,8,12].map(d => <option key={d} value={d}>{d * 15}m</option>)}
+            </select>
+            <div style={{ display: 'flex', gap: 3 }}>
+              {theme.taskColor.map(c => (
+                <button key={c.id} onClick={() => onUpdate(task.id, { color_id: c.id })} style={{
+                  width: 14, height: 14, borderRadius: '50%', background: c.bg, padding: 0,
+                  border: (task.color_id || task.colorId) === c.id ? `1.5px solid ${theme.textPrimary}` : `1px solid ${c.border}`,
+                  cursor: 'pointer',
+                }} />
+              ))}
+            </div>
+            <button onClick={() => setEditingFields(false)} style={{
+              fontSize: 9, padding: '1px 6px', borderRadius: theme.radius.sm,
+              border: `1px solid ${theme.border}`, color: theme.textTertiary, cursor: 'pointer',
+            }}>Done</button>
+          </div>
+        )}
       </div>
 
       {/* Actions */}
       {hover && !editing && (
         <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+          <button onClick={() => setEditingFields(!editingFields)} title="Edit fields" style={{
+            width: 24, height: 24, borderRadius: theme.radius.sm, fontSize: 11,
+            color: editingFields ? theme.accent : theme.textTertiary, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            border: `0.5px solid ${editingFields ? theme.accent : theme.border}`,
+          }}>✎</button>
           {onNote && (
             <button onClick={() => onNote(task)} title="Note" style={{
               width: 24, height: 24, borderRadius: theme.radius.sm, fontSize: 11,

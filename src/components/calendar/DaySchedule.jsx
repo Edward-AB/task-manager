@@ -86,6 +86,7 @@ export default function DaySchedule({
 
   const scrollAreaStyle = {
     overflowY: 'auto',
+    overscrollBehavior: 'contain',
     height: 'calc(100vh - 120px)',
     position: 'relative',
   };
