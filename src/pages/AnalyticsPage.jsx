@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '../hooks/useTheme.js';
 import { apiGet } from '../api/client.js';
+import ProductivityChart from '../components/analytics/ProductivityChart.jsx';
+import CompletionHeatmap from '../components/analytics/CompletionHeatmap.jsx';
+import PriorityBreakdown from '../components/analytics/PriorityBreakdown.jsx';
+import TimeDistribution from '../components/analytics/TimeDistribution.jsx';
+import ProjectProgress from '../components/analytics/ProjectProgress.jsx';
 
 export default function AnalyticsPage() {
   const { theme } = useTheme();
   const [stats, setStats] = useState(null);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await apiGet('/api/stats');
-        setStats(res.data);
+        const [statsRes, projRes] = await Promise.all([
+          apiGet('/api/stats'),
+          apiGet('/api/projects').catch(() => ({ data: [] })),
+        ]);
+        setStats(statsRes.data);
+        setProjects(projRes.data || []);
       } catch {}
       setLoading(false);
     })();
@@ -28,6 +38,20 @@ export default function AnalyticsPage() {
 
   const s = stats || {};
 
+  const cardStyle = {
+    padding: 28,
+    borderRadius: theme.radius.lg,
+    border: `1px solid ${theme.border}`,
+    background: theme.surface,
+  };
+
+  const sectionTitle = {
+    fontSize: theme.font.heading,
+    fontWeight: 500,
+    color: theme.textPrimary,
+    marginBottom: 20,
+  };
+
   return (
     <div style={{ padding: 32, maxWidth: 1200, margin: '0 auto' }}>
       <h1 style={{ fontSize: theme.font.headingXl, fontWeight: 600, color: theme.textPrimary, marginBottom: 28 }}>Analytics</h1>
@@ -35,12 +59,12 @@ export default function AnalyticsPage() {
       {/* Stats grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
         {[
-          { label: 'Total Tasks', value: s.total_tasks || 0, icon: '📋' },
-          { label: 'Completed', value: s.completed_tasks || 0, icon: '✅' },
-          { label: 'Completion Rate', value: `${s.completion_rate || 0}%`, icon: '📊' },
-          { label: 'Current Streak', value: `${s.current_streak || 0} days`, icon: '🔥' },
-          { label: 'Longest Streak', value: `${s.longest_streak || 0} days`, icon: '🏆' },
-          { label: 'Tasks This Week', value: s.tasks_this_week || 0, icon: '📅' },
+          { label: 'Total Tasks', value: s.total_tasks || 0, icon: '\ud83d\udccb' },
+          { label: 'Completed', value: s.completed_tasks || 0, icon: '\u2705' },
+          { label: 'Completion Rate', value: `${s.completion_rate || 0}%`, icon: '\ud83d\udcca' },
+          { label: 'Current Streak', value: `${s.current_streak || 0} days`, icon: '\ud83d\udd25' },
+          { label: 'Longest Streak', value: `${s.longest_streak || 0} days`, icon: '\ud83c\udfc6' },
+          { label: 'Tasks This Week', value: s.tasks_this_week || 0, icon: '\ud83d\udcc5' },
         ].map((item, i) => (
           <div key={i} style={{
             padding: 24, borderRadius: theme.radius.lg, border: `1px solid ${theme.border}`,
@@ -53,55 +77,81 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {/* Productivity chart placeholder */}
+      {/* Streak highlight */}
       <div style={{
-        padding: 32, borderRadius: theme.radius.lg, border: `1px solid ${theme.border}`,
-        background: theme.surface, marginBottom: 20,
+        ...cardStyle,
+        marginBottom: 20,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 24,
+        flexWrap: 'wrap',
       }}>
-        <h2 style={{ fontSize: theme.font.heading, fontWeight: 500, color: theme.textPrimary, marginBottom: 20 }}>
-          30-Day Productivity
-        </h2>
-        {(s.daily_counts || []).length > 0 ? (
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 120 }}>
-            {(s.daily_counts || []).map((d, i) => {
-              const max = Math.max(...(s.daily_counts || []).map(x => x.count), 1);
-              return (
-                <div key={i} style={{
-                  flex: 1, minWidth: 0, borderRadius: '3px 3px 0 0',
-                  background: d.count > 0 ? theme.accent : theme.border,
-                  height: `${Math.max(4, (d.count / max) * 100)}%`,
-                  opacity: d.count > 0 ? 1 : 0.3,
-                  transition: 'height 500ms',
-                }} title={`${d.date}: ${d.count} tasks`} />
-              );
-            })}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 36 }}>{'\ud83d\udd25'}</span>
+          <div>
+            <div style={{ fontSize: theme.font.headingLg, fontWeight: 700, color: theme.textPrimary }}>
+              {s.current_streak || 0} day streak
+            </div>
+            <div style={{ fontSize: theme.font.bodySmall, color: theme.textTertiary, marginTop: 2 }}>
+              Keep completing tasks daily!
+            </div>
           </div>
-        ) : (
-          <p style={{ color: theme.textTertiary, textAlign: 'center' }}>Complete some tasks to see your chart</p>
-        )}
+        </div>
+        <div style={{
+          marginLeft: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '8px 16px',
+          borderRadius: theme.radius.md,
+          background: theme.accentBg,
+        }}>
+          <span style={{ fontSize: 16 }}>{'\ud83c\udfc6'}</span>
+          <span style={{ fontSize: theme.font.body, color: theme.accentText, fontWeight: 500 }}>
+            Best: {s.longest_streak || 0} days
+          </span>
+        </div>
       </div>
 
-      {/* Priority breakdown */}
+      {/* 30-Day Productivity chart */}
+      <div style={{ ...cardStyle, marginBottom: 20 }}>
+        <h2 style={sectionTitle}>30-Day Productivity</h2>
+        <ProductivityChart dailyCounts={s.daily_counts || []} />
+      </div>
+
+      {/* Completion Heatmap */}
+      <div style={{ ...cardStyle, marginBottom: 20 }}>
+        <h2 style={sectionTitle}>Activity Heatmap</h2>
+        <CompletionHeatmap dailyCounts={s.daily_counts || []} />
+      </div>
+
+      {/* Two-column row: Priority Breakdown + Time Distribution */}
       <div style={{
-        padding: 32, borderRadius: theme.radius.lg, border: `1px solid ${theme.border}`,
-        background: theme.surface,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+        gap: 20,
+        marginBottom: 20,
       }}>
-        <h2 style={{ fontSize: theme.font.heading, fontWeight: 500, color: theme.textPrimary, marginBottom: 20 }}>
-          Priority Breakdown
-        </h2>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-          {[
-            { label: 'High', count: s.priority_high || 0, color: theme.chartHigh },
-            { label: 'Medium', count: s.priority_medium || 0, color: theme.chartMedium },
-            { label: 'Low', count: s.priority_low || 0, color: theme.chartLow },
-            { label: 'None', count: s.priority_none || 0, color: theme.chartNone },
-          ].map((p, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: p.color }} />
-              <span style={{ fontSize: theme.font.body, color: theme.textSecondary }}>{p.label}: {p.count}</span>
-            </div>
-          ))}
+        <div style={cardStyle}>
+          <h2 style={sectionTitle}>Priority Breakdown</h2>
+          <PriorityBreakdown
+            high={s.priority_high || 0}
+            medium={s.priority_medium || 0}
+            low={s.priority_low || 0}
+            none={s.priority_none || 0}
+          />
         </div>
+
+        <div style={cardStyle}>
+          <h2 style={sectionTitle}>Task Distribution</h2>
+          <TimeDistribution stats={s} />
+        </div>
+      </div>
+
+      {/* Project Progress */}
+      <div style={{ ...cardStyle, marginBottom: 20 }}>
+        <h2 style={sectionTitle}>Project Progress</h2>
+        <ProjectProgress projects={projects} />
       </div>
     </div>
   );
