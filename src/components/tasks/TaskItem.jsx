@@ -93,7 +93,14 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
             <span style={{ fontSize: 9, color: theme.textTertiary }}>{slotToTime(task.slot)}</span>
           )}
           {task.note && (
-            <span style={{ fontSize: 9, color: theme.textTertiary }} title="Has note">📝</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center' }} title="Has note">
+              <svg width={10} height={10} viewBox="0 0 14 14" fill="none">
+                <rect x="2" y="1" width="10" height="12" rx="1.5" stroke={theme.textTertiary} strokeWidth="1.2"/>
+                <line x1="4.5" y1="4" x2="9.5" y2="4" stroke={theme.textTertiary} strokeWidth="1" strokeLinecap="round"/>
+                <line x1="4.5" y1="6.5" x2="9.5" y2="6.5" stroke={theme.textTertiary} strokeWidth="1" strokeLinecap="round"/>
+                <line x1="4.5" y1="9" x2="7.5" y2="9" stroke={theme.textTertiary} strokeWidth="1" strokeLinecap="round"/>
+              </svg>
+            </span>
           )}
           {dl && dlc && (
             <span style={{
@@ -144,10 +151,17 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
           }}>✎</button>
           {onNote && (
             <button onClick={() => onNote(task)} title="Note" style={{
-              width: 24, height: 24, borderRadius: theme.radius.sm, fontSize: 11,
+              width: 24, height: 24, borderRadius: theme.radius.sm,
               color: theme.textTertiary, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: `0.5px solid ${theme.border}`,
-            }}>📝</button>
+              border: `0.5px solid ${theme.border}`, padding: 0,
+            }}>
+              <svg width={12} height={12} viewBox="0 0 14 14" fill="none">
+                <rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+                <line x1="4.5" y1="4" x2="9.5" y2="4" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+                <line x1="4.5" y1="6.5" x2="9.5" y2="6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+                <line x1="4.5" y1="9" x2="7.5" y2="9" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+              </svg>
+            </button>
           )}
           {onMove && (
             <button onClick={() => onMove(task.id)} title="Move to tomorrow" style={{
