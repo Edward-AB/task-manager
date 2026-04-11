@@ -6,7 +6,7 @@ export default function StatsGrid({ total, done, left, scheduled }) {
   const items = [
     { label: 'Total', value: total, color: theme.textPrimary },
     { label: 'Done', value: done, color: theme.success },
-    { label: 'Left', value: left, color: theme.textSecondary },
+    { label: 'Remaining', value: left, color: theme.textSecondary },
     { label: 'Scheduled', value: scheduled, color: theme.accent },
   ];
 

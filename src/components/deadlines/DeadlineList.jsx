@@ -28,7 +28,7 @@ export default function DeadlineList({ deadlines, tasks, projects, onAdd, onDele
         <div style={{
           fontSize: theme.font.label, fontWeight: 500, color: theme.textTertiary,
           letterSpacing: '0.08em', textTransform: 'uppercase',
-        }}>UPCOMING DEADLINES</div>
+        }}>DEADLINES</div>
         <button onClick={() => setShowForm(!showForm)} style={{
           fontSize: 16, width: 24, height: 24, borderRadius: theme.radius.sm,
           border: `1px solid ${theme.border}`, color: theme.textTertiary,

@@ -41,7 +41,7 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       draggable
-      onDragStart={e => e.dataTransfer.setData('taskId', task.id)}
+      onDragStart={e => { e.dataTransfer.setData('text/plain', task.id); e.dataTransfer.effectAllowed = 'move'; }}
     >
       {/* Checkbox */}
       <button onClick={() => onToggle(task.id, !task.done)} style={{
@@ -51,9 +51,9 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer', transition: 'transform 250ms',
       }}>
-        {task.done && <svg width={10} height={10} viewBox="0 0 10 10" fill="none">
+        {task.done ? <svg width={10} height={10} viewBox="0 0 10 10" fill="none">
           <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-        </svg>}
+        </svg> : null}
       </button>
 
       {/* Content */}

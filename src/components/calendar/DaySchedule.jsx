@@ -106,7 +106,7 @@ export default function DaySchedule({
   return (
     <div style={cardStyle}>
       <div style={headerStyle}>
-        <span>Schedule</span>
+        <span>DAY SCHEDULE &mdash; DRAG TASKS HERE</span>
         <span style={{ color: theme.textTertiary, fontWeight: 400 }}>
           {scheduledTasks.length} task{scheduledTasks.length !== 1 ? 's' : ''}
         </span>

@@ -1,11 +1,25 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme.js';
 import { useAuth } from '../hooks/useAuth.js';
 import { useNarrow } from '../hooks/useNarrow.js';
+import { useDate } from '../contexts/DateContext.jsx';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts.js';
 import { apiGet, apiPost, apiPatch, apiDelete, apiPut } from '../api/client.js';
 import { dateKey, todayKey, formatDate, getMonday, addDays } from '../utils/dates.js';
 import { playTick, playCelebration } from '../utils/sounds.js';
 import { DEFAULT_TASK_DURATION } from '../constants';
+
+/** Map snake_case DB fields to camelCase for consistent frontend usage */
+function normalizeTask(t) {
+  return {
+    ...t,
+    colorId: t.color_id ?? t.colorId ?? 'white',
+    deadlineId: t.deadline_id ?? t.deadlineId ?? null,
+    projectId: t.project_id ?? t.projectId ?? null,
+    parentTaskId: t.parent_task_id ?? t.parentTaskId ?? null,
+  };
+}
 
 // Sub-components
 import GreetingCard from '../components/dashboard/GreetingCard.jsx';
@@ -19,12 +33,14 @@ import DaySchedule from '../components/calendar/DaySchedule.jsx';
 import NoteModal from '../components/notes/NoteModal.jsx';
 
 export default function DashboardPage() {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const narrow = useNarrow();
+  const navigate = useNavigate();
+  const taskInputRef = useRef(null);
+  const { date, setDate } = useDate();
 
   // ── State ──────────────────────────────────────────
-  const [date, setDate] = useState(new Date());
   const [allTasks, setAllTasks] = useState([]);
   const [deadlines, setDeadlines] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -36,6 +52,16 @@ export default function DashboardPage() {
   const [noteTask, setNoteTask] = useState(null);
   const [celebrating, setCelebrating] = useState(false);
   const [celebratedKey, setCelebratedKey] = useState(null);
+
+  // ── Keyboard shortcuts ────────────────────────────
+  useKeyboardShortcuts({
+    onNewTask: () => taskInputRef.current?.focus(),
+    onToggleTheme: toggleTheme,
+    onPrevDay: () => setDate((d) => addDays(d, -1)),
+    onNextDay: () => setDate((d) => addDays(d, 1)),
+    onEscape: () => setNoteTask(null),
+    onHelp: () => navigate('/help'),
+  });
 
   // ── Derived values ─────────────────────────────────
   const dk = dateKey(date);
@@ -60,7 +86,7 @@ export default function DashboardPage() {
       // Normalize responses - the API may return arrays directly or {data: [...]}
       const norm = (res) => Array.isArray(res) ? res : (res?.data || []);
 
-      setAllTasks(norm(tasksRes));
+      setAllTasks(norm(tasksRes).map(normalizeTask));
       setDeadlines(norm(dlRes));
       setProjects(norm(projRes));
       setEvents(norm(evRes));
@@ -112,7 +138,7 @@ export default function DashboardPage() {
         date: dk,
         duration: taskData.duration || DEFAULT_TASK_DURATION,
       });
-      const newTask = res?.data || res;
+      const newTask = normalizeTask(res?.data || res);
       setAllTasks((prev) => [...prev, newTask]);
     } catch (err) {
       console.error('Add task error:', err);
@@ -316,6 +342,7 @@ export default function DashboardPage() {
       onAdd={handleAddTask}
       deadlines={deadlines}
       projects={projects}
+      inputRef={taskInputRef}
     />
   );
 
@@ -347,25 +374,10 @@ export default function DashboardPage() {
     />
   );
 
-  // ── Date header ────────────────────────────────────
-  const dateHeader = (
-    <div style={{ marginBottom: 16 }}>
-      <h2 style={{
-        fontSize: theme.font.headingLg,
-        fontWeight: 600,
-        color: theme.textPrimary,
-        margin: 0,
-      }}>
-        {formatDate(date)}
-      </h2>
-    </div>
-  );
-
   // ── Narrow (mobile) layout ─────────────────────────
   if (narrow) {
     return (
       <div style={{ padding: 12, maxWidth: 600, margin: '0 auto' }}>
-        {dateHeader}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {greetingCard}
           {addTaskForm}
@@ -387,11 +399,10 @@ export default function DashboardPage() {
   // ── Wide (desktop) layout ──────────────────────────
   return (
     <div style={{ padding: 20, maxWidth: 1400, margin: '0 auto' }}>
-      {dateHeader}
       <div style={{ display: 'flex', gap: 20 }}>
-        {/* Left column - 25% */}
+        {/* Left column */}
         <div style={{
-          width: '25%', minWidth: 260,
+          width: '26%', minWidth: 260, flexShrink: 0,
           display: 'flex', flexDirection: 'column', gap: 16,
         }}>
           {greetingCard}
@@ -399,18 +410,18 @@ export default function DashboardPage() {
           {deadlineList}
         </div>
 
-        {/* Middle column - flex */}
+        {/* Middle column */}
         <div style={{
-          flex: 1, minWidth: 300,
+          flex: 1, minWidth: 280,
           display: 'flex', flexDirection: 'column', gap: 16,
         }}>
-          {dayNoteCard}
           {addTaskForm}
           {taskList}
+          {dayNoteCard}
         </div>
 
-        {/* Right column - 35% */}
-        <div style={{ width: '35%', minWidth: 300 }}>
+        {/* Right column */}
+        <div style={{ width: '34%', minWidth: 300, flexShrink: 0 }}>
           {daySchedule}
         </div>
       </div>

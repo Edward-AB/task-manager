@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useTheme } from '../../hooks/useTheme.js';
-import { useAuth } from '../../hooks/useAuth.js';
 import WeekStrip from '../calendar/WeekStrip.jsx';
 import MonthCalendar from '../calendar/MonthCalendar.jsx';
 
@@ -13,11 +11,9 @@ function getGreeting() {
 
 export default function GreetingCard({ date, onDateChange, tasks, calView, onCalViewChange }) {
   const { theme } = useTheme();
-  const { user } = useAuth();
 
   const total = tasks.length;
   const done = tasks.filter((t) => t.done).length;
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
   const cardStyle = {
     background: theme.surface,
@@ -33,27 +29,10 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
     marginBottom: 4,
   };
 
-  const progressTextStyle = {
+  const subtitleStyle = {
     fontSize: theme.font.bodySmall,
     color: theme.textSecondary,
-    marginBottom: 10,
-  };
-
-  const trackStyle = {
-    width: '100%',
-    height: 6,
-    background: theme.bgTertiary,
-    borderRadius: theme.radius.full,
-    overflow: 'hidden',
-    marginBottom: 16,
-  };
-
-  const fillStyle = {
-    width: `${pct}%`,
-    height: '100%',
-    background: theme.accent,
-    borderRadius: theme.radius.full,
-    transition: 'width 0.4s ease',
+    marginBottom: 14,
   };
 
   const toggleWrap = {
@@ -83,13 +62,10 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
   return (
     <div style={cardStyle}>
       <div style={greetStyle}>
-        {getGreeting()}, @{user?.username || 'friend'}
+        {getGreeting()}
       </div>
-      <div style={progressTextStyle}>
-        {total > 0 ? `${done} of ${total} tasks done` : 'No tasks for today'}
-      </div>
-      <div style={trackStyle}>
-        <div style={fillStyle} />
+      <div style={subtitleStyle}>
+        {total > 0 ? `${done} of ${total} tasks done today` : 'No tasks for today'}
       </div>
 
       {/* Week / Month toggle */}

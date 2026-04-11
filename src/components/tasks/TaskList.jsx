@@ -19,9 +19,9 @@ export default function TaskList({
     : [];
 
   // Sections
-  const deadlineTasks = dayTasks.filter((t) => t.deadlineId);
-  const unscheduled = dayTasks.filter((t) => !t.deadlineId && t.slot == null);
-  const scheduled = dayTasks.filter((t) => !t.deadlineId && t.slot != null).sort((a, b) => a.slot - b.slot);
+  const deadlineTasks = dayTasks.filter((t) => t.deadlineId || t.deadline_id);
+  const unscheduled = dayTasks.filter((t) => !(t.deadlineId || t.deadline_id) && t.slot == null);
+  const scheduled = dayTasks.filter((t) => !(t.deadlineId || t.deadline_id) && t.slot != null).sort((a, b) => a.slot - b.slot);
 
   const sectionLabel = (text, color) => (
     <div style={{
@@ -77,7 +77,7 @@ export default function TaskList({
 
       {deadlineTasks.length > 0 && (
         <div style={sectionWrap}>
-          {sectionLabel(`Deadline tasks (${deadlineTasks.length})`)}
+          {sectionLabel(`DEADLINE TASKS SCHEDULED TODAY`)}
           <div style={listGap}>
             {deadlineTasks.map((t) => (
               <TaskItem key={t.id} task={t} {...itemProps} />
@@ -90,7 +90,7 @@ export default function TaskList({
         <div style={sectionWrap} onDragOver={handleDragOver} onDrop={handleDrop}>
           {unscheduled.length > 0 && (
             <>
-              {sectionLabel(`Unscheduled (${unscheduled.length})`)}
+              {sectionLabel(`UNSCHEDULED \u00B7 ${unscheduled.length}`)}
               <div style={listGap}>
                 {unscheduled.map((t) => (
                   <TaskItem key={t.id} task={t} {...itemProps} />
@@ -101,7 +101,7 @@ export default function TaskList({
 
           {scheduled.length > 0 && (
             <div style={{ marginTop: unscheduled.length > 0 ? 16 : 0 }}>
-              {sectionLabel(`Scheduled (${scheduled.length})`)}
+              {sectionLabel(`SCHEDULED \u00B7 ${scheduled.length}`)}
               <div style={listGap}>
                 {scheduled.map((t) => (
                   <TaskItem key={t.id} task={t} {...itemProps} />

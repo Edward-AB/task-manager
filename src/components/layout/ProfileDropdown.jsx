@@ -4,7 +4,7 @@ import { useTheme } from '../../hooks/useTheme.js';
 import { useAuth } from '../../hooks/useAuth.js';
 
 const LINKS = [
-  { to: '/settings/account', label: 'Account' },
+  { to: '/account', label: 'Account' },
   { to: '/settings', label: 'Settings' },
   { to: '/help', label: 'Help' },
   { to: '/changelog', label: 'Changelog' },

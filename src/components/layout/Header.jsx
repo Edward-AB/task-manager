@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme.js';
+import { useDate } from '../../contexts/DateContext.jsx';
 import useTimer from '../../hooks/useTimer.js';
+import { formatDate, addDays, dateKey } from '../../utils/dates.js';
 import logoLight from '../../assets/logo-light.png';
 import logoDark from '../../assets/logo-dark.png';
 import ProfileDropdown from './ProfileDropdown.jsx';
@@ -19,13 +21,24 @@ const NAV_LINKS = [
 export default function Header() {
   const { theme, themeMode, toggleTheme } = useTheme();
   const location = useLocation();
+  const { date, setDate } = useDate();
   const [profileOpen, setProfileOpen] = useState(false);
   const [timerPopupOpen, setTimerPopupOpen] = useState(false);
+  const [now, setNow] = useState(new Date());
   const timerSlotRef = useRef(null);
   const { timerState, startTimer, pauseTimer, resumeTimer, cancelTimer, addTime } = useTimer();
 
   const lastTotalRef = useRef(null);
   if (timerState && timerState.total) lastTotalRef.current = timerState.total;
+
+  // Update clock every 30 seconds
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(id);
+  }, []);
+
+  const isDashboard = location.pathname === '/dashboard' || location.pathname === '/';
+  const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
   const handleTimerButtonClick = () => {
     if (timerState?.state === 'done') {
@@ -165,6 +178,47 @@ export default function Header() {
       </svg>
     );
 
+  const dateNavStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  };
+
+  const navArrowStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+    border: `1px solid ${theme.border}`,
+    borderRadius: theme.radius.sm,
+    background: 'transparent',
+    color: theme.headerText,
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontFamily: 'inherit',
+  };
+
+  const todayBtnStyle = {
+    padding: '4px 12px',
+    fontSize: theme.font.bodySmall,
+    fontWeight: 500,
+    border: `1px solid ${theme.border}`,
+    borderRadius: theme.radius.sm,
+    background: 'transparent',
+    color: theme.headerText,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+  };
+
+  const clockStyle = {
+    fontSize: theme.font.body,
+    fontWeight: 600,
+    color: theme.headerText,
+    minWidth: 44,
+    textAlign: 'right',
+  };
+
   return (
     <header style={headerStyle}>
       <div style={leftStyle}>
@@ -180,7 +234,31 @@ export default function Header() {
         </nav>
       </div>
 
+      {/* Center: Date navigation */}
+      {isDashboard && (
+        <div style={dateNavStyle}>
+          <button style={navArrowStyle} onClick={() => setDate(addDays(date, -1))} aria-label="Previous day">
+            {'\u2039'}
+          </button>
+          <span style={{ fontSize: theme.font.body, fontWeight: 600, color: theme.headerText, whiteSpace: 'nowrap' }}>
+            {formatDate(date)}
+          </span>
+          <button style={navArrowStyle} onClick={() => setDate(addDays(date, 1))} aria-label="Next day">
+            {'\u203A'}
+          </button>
+          <button
+            style={todayBtnStyle}
+            onClick={() => setDate(new Date())}
+          >
+            Today
+          </button>
+        </div>
+      )}
+
       <div style={rightStyle}>
+        {/* Clock */}
+        <span style={clockStyle}>{timeStr}</span>
+
         {/* Timer */}
         <div ref={timerSlotRef} style={{ position: 'relative' }}>
           <TimerButton timerState={timerState} onClick={handleTimerButtonClick} />

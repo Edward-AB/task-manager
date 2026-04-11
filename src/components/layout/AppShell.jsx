@@ -1,12 +1,29 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme.js';
 import { useNarrow } from '../../hooks/useNarrow.js';
+import { DateProvider } from '../../contexts/DateContext.jsx';
 import Header from './Header.jsx';
-import Sidebar from './Sidebar.jsx';
+import Sidebar, { COLLAPSED_WIDTH, EXPANDED_WIDTH } from './Sidebar.jsx';
+
+const SIDEBAR_KEY = 'pinetask_sidebar_collapsed';
 
 export default function AppShell({ children }) {
   const { theme } = useTheme();
   const narrow = useNarrow();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => localStorage.getItem(SIDEBAR_KEY) === '1'
+  );
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem(SIDEBAR_KEY, next ? '1' : '0');
+      return next;
+    });
+  };
+
+  const sidebarWidth = sidebarCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
 
   const shellStyle = {
     display: 'flex',
@@ -25,16 +42,19 @@ export default function AppShell({ children }) {
     flex: 1,
     minWidth: 0,
     padding: narrow ? '16px' : '24px 32px',
-    marginLeft: narrow ? 0 : 220, // sidebar width
+    marginLeft: narrow ? 0 : sidebarWidth,
+    transition: 'margin-left 200ms ease',
   };
 
   return (
-    <div style={shellStyle}>
-      <Header />
-      <div style={bodyStyle}>
-        {!narrow && <Sidebar />}
-        <main style={mainStyle}>{children || <Outlet />}</main>
+    <DateProvider>
+      <div style={shellStyle}>
+        <Header />
+        <div style={bodyStyle}>
+          {!narrow && <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />}
+          <main style={mainStyle}>{children || <Outlet />}</main>
+        </div>
       </div>
-    </div>
+    </DateProvider>
   );
 }

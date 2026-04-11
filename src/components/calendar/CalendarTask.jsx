@@ -54,8 +54,8 @@ export default function CalendarTask({ task, col, totalCols, colorObj, onToggle,
     >
       <span style={{ opacity: 0.6, flexShrink: 0 }}>{timeStr}</span>
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{task.text}</span>
-      {task.deadline_id && deadlines && (() => {
-        const dl = deadlines.find(d => d.id === task.deadline_id);
+      {(task.deadlineId || task.deadline_id) && deadlines && (() => {
+        const dl = deadlines.find(d => d.id === (task.deadlineId || task.deadline_id));
         if (!dl) return null;
         const dlc = theme.deadline[dl.color_idx % theme.deadline.length];
         return (
