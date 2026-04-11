@@ -26,7 +26,8 @@
       "Bash(python3 -c ':*)",
       "Bash(pip3 install:*)",
       "Bash(unzip -l /var/folders/_q/fnr3yp4j4xg4xs9kv4gcpvmw0000gn/T/com.anthropic.claudefordesktop/zip_cache/C925DCC6-BE9C-42A0-95D3-EAF0858550F1-34894-000008657C2B0EFD)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(rm -f /Users/edward/pinetask/.git/index.lock)"
     ]
   }
 }
