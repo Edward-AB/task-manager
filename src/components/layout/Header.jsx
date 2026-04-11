@@ -38,7 +38,7 @@ const NAV_ITEMS = [
 
 export default function Header({ onToggleSidebar, sidebarCollapsed }) {
   const { theme, themeMode, toggleTheme } = useTheme();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { date, setDate } = useDate();
@@ -223,7 +223,13 @@ export default function Header({ onToggleSidebar, sidebarCollapsed }) {
 
         {/* Profile */}
         <div style={{ position: 'relative' }}>
-          <button style={profileBtn} onClick={() => setProfileOpen((o) => !o)} aria-label="Profile menu">P</button>
+          <button style={profileBtn} onClick={() => setProfileOpen((o) => !o)} aria-label="Profile menu">
+            {user?.avatar_url ? (
+              <img src={user.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            ) : (
+              (user?.username || user?.email || 'U')[0].toUpperCase()
+            )}
+          </button>
           {profileOpen && <ProfileDropdown onClose={() => setProfileOpen(false)} />}
         </div>
 
