@@ -120,7 +120,7 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
             <div style={{ display: 'flex', gap: 3 }}>
               {theme.taskColor.map(c => (
                 <button key={c.id} onClick={() => onUpdate(task.id, { color_id: c.id })} style={{
-                  width: 14, height: 14, borderRadius: '50%', background: c.bg, padding: 0,
+                  width: 20, height: 12, borderRadius: 4, background: c.bg, padding: 0,
                   border: (task.color_id || task.colorId) === c.id ? `1.5px solid ${theme.textPrimary}` : `1px solid ${c.border}`,
                   cursor: 'pointer',
                 }} />
