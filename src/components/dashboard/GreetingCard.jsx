@@ -16,10 +16,10 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
   const done = tasks.filter((t) => t.done).length;
 
   const cardStyle = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
-    borderRadius: theme.radius.lg,
-    padding: '20px',
+    background: theme.bgSecondary,
+    border: `0.5px solid ${theme.border}`,
+    borderRadius: theme.radius.md,
+    padding: '14px',
   };
 
   const greetStyle = {
@@ -32,16 +32,16 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
   const subtitleStyle = {
     fontSize: theme.font.bodySmall,
     color: theme.textSecondary,
-    marginBottom: 14,
+    marginBottom: 10,
   };
 
   const toggleWrap = {
     display: 'flex',
     gap: 4,
     background: theme.bgTertiary,
-    borderRadius: theme.radius.md,
-    padding: 3,
-    marginBottom: 14,
+    borderRadius: theme.radius.sm,
+    padding: 2,
+    marginBottom: 10,
   };
 
   const toggleBtn = (active) => ({

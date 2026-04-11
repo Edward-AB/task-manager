@@ -13,7 +13,20 @@
       "mcp__9d8b289b-10dc-4cae-8126-fdfd431060c0__accounts_list",
       "mcp__9d8b289b-10dc-4cae-8126-fdfd431060c0__set_active_account",
       "mcp__9d8b289b-10dc-4cae-8126-fdfd431060c0__d1_database_query",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(python3 -c \"import sys,json; d=json.loads\\(sys.stdin.read\\(\\)\\); print\\(d.get\\('message',{}\\).get\\('content',[{}]\\)[-1].get\\('text','...'\\)[:200] if isinstance\\(d.get\\('message',{}\\).get\\('content'\\),list\\) else '...'\\)\")",
+      "Bash(sqlite3 /Users/edward/pinetask/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite \"SELECT name FROM sqlite_master WHERE type='table';\")",
+      "Bash(sqlite3 .wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite)",
+      "Bash(node -e ':*)",
+      "Bash(sqlite3 .wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite \"INSERT INTO users \\(id, email, username, password_hash, salt, is_admin, onboarding_completed, created_at\\) VALUES \\('test-user-1', 'edward@pinetask.com', 'edward', 'C126AYEVuo-uaaYO6qPnnFvyVOF8VU5RAJcBX_jwoFs', '15537a77d087fd8206df320635d8c41b', 1, 1, $\\(date +%s000\\)\\);\")",
+      "Bash(sqlite3 .wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite \"SELECT id, email, username FROM users;\")",
+      "Bash(sqlite3 .wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite \"SELECT id, email, username, password_hash FROM users;\")",
+      "Bash(sqlite3 .wrangler/state/v3/d1/miniflare-D1DatabaseObject/901352b55370bbf1ce099179666244701f4f121fe17a9c8bc5c75bc09595279a.sqlite \"DELETE FROM user_settings; DELETE FROM tasks; DELETE FROM deadlines; DELETE FROM users;\")",
+      "Read(//private/var/folders/_q/fnr3yp4j4xg4xs9kv4gcpvmw0000gn/T/com.anthropic.claudefordesktop/zip_cache/**)",
+      "Bash(python3 -c ':*)",
+      "Bash(pip3 install:*)",
+      "Bash(unzip -l /var/folders/_q/fnr3yp4j4xg4xs9kv4gcpvmw0000gn/T/com.anthropic.claudefordesktop/zip_cache/C925DCC6-BE9C-42A0-95D3-EAF0858550F1-34894-000008657C2B0EFD)",
+      "Bash(npx vite:*)"
     ]
   }
 }

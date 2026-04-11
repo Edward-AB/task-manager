@@ -21,8 +21,8 @@ export default function DeadlineList({ deadlines, tasks, projects, onAdd, onDele
 
   return (
     <div style={{
-      padding: 16, borderRadius: theme.radius.lg, border: `1px solid ${theme.border}`,
-      background: theme.surface,
+      padding: 14, borderRadius: theme.radius.md, border: `0.5px solid ${theme.border}`,
+      background: theme.bgSecondary,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <div style={{

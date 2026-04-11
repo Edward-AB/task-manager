@@ -65,17 +65,17 @@ export default function DaySchedule({
   };
 
   const cardStyle = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
-    borderRadius: theme.radius.lg,
+    background: theme.bgSecondary,
+    border: `0.5px solid ${theme.border}`,
+    borderRadius: theme.radius.md,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
   };
 
   const headerStyle = {
-    padding: '14px 20px',
-    borderBottom: `1px solid ${theme.border}`,
+    padding: '10px 14px',
+    borderBottom: `0.5px solid ${theme.border}`,
     fontSize: theme.font.bodySmall,
     fontWeight: 600,
     color: theme.textSecondary,

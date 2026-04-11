@@ -398,12 +398,12 @@ export default function DashboardPage() {
 
   // ── Wide (desktop) layout ──────────────────────────
   return (
-    <div style={{ padding: 20, maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', gap: 20 }}>
+    <div style={{ padding: '4px 0', maxWidth: 1400, margin: '0 auto' }}>
+      <div style={{ display: 'flex', gap: 10 }}>
         {/* Left column */}
         <div style={{
-          width: '26%', minWidth: 260, flexShrink: 0,
-          display: 'flex', flexDirection: 'column', gap: 16,
+          width: '25%', minWidth: 240, flexShrink: 0,
+          display: 'flex', flexDirection: 'column', gap: 10,
         }}>
           {greetingCard}
           {overviewCard}
@@ -412,8 +412,8 @@ export default function DashboardPage() {
 
         {/* Middle column */}
         <div style={{
-          flex: 1, minWidth: 280,
-          display: 'flex', flexDirection: 'column', gap: 16,
+          flex: 1, minWidth: 260,
+          display: 'flex', flexDirection: 'column', gap: 10,
         }}>
           {addTaskForm}
           {taskList}
@@ -421,7 +421,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Right column */}
-        <div style={{ width: '34%', minWidth: 300, flexShrink: 0 }}>
+        <div style={{ width: '34%', minWidth: 280, flexShrink: 0 }}>
           {daySchedule}
         </div>
       </div>

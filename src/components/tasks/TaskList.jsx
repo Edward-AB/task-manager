@@ -43,8 +43,8 @@ export default function TaskList({
   if (totalVisible === 0) {
     return (
       <div style={{
-        padding: 32, textAlign: 'center', borderRadius: theme.radius.lg,
-        border: `1px solid ${theme.border}`, background: theme.surface,
+        padding: 24, textAlign: 'center', borderRadius: theme.radius.md,
+        border: `0.5px solid ${theme.border}`, background: theme.bgSecondary,
       }}>
         <div style={{ fontSize: 32, marginBottom: 8 }}>{'\uD83D\uDCCB'}</div>
         <p style={{ color: theme.textTertiary, fontSize: theme.font.body }}>No tasks for this day</p>
@@ -54,10 +54,10 @@ export default function TaskList({
   }
 
   const sectionWrap = {
-    borderRadius: theme.radius.lg,
-    border: `1px solid ${theme.border}`,
-    background: theme.surface,
-    padding: 12,
+    borderRadius: theme.radius.md,
+    border: `0.5px solid ${theme.border}`,
+    background: theme.bgSecondary,
+    padding: 10,
   };
 
   const listGap = { display: 'flex', flexDirection: 'column', gap: 6 };

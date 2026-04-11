@@ -18,10 +18,10 @@ export default function DayNoteCard({ note, onSave }) {
   };
 
   const cardStyle = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
-    borderRadius: theme.radius.lg,
-    padding: '14px 20px',
+    background: theme.bgSecondary,
+    border: `0.5px solid ${theme.border}`,
+    borderRadius: theme.radius.md,
+    padding: '12px 14px',
   };
 
   const headerStyle = {

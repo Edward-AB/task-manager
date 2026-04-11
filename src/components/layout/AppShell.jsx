@@ -12,7 +12,7 @@ export default function AppShell({ children }) {
   const { theme } = useTheme();
   const narrow = useNarrow();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
-    () => localStorage.getItem(SIDEBAR_KEY) === '1'
+    () => localStorage.getItem(SIDEBAR_KEY) !== '0'
   );
 
   const toggleSidebar = () => {
@@ -41,7 +41,7 @@ export default function AppShell({ children }) {
   const mainStyle = {
     flex: 1,
     minWidth: 0,
-    padding: narrow ? '16px' : '24px 32px',
+    padding: narrow ? '12px' : '12px 16px',
     marginLeft: narrow ? 0 : sidebarWidth,
     transition: 'margin-left 200ms ease',
   };

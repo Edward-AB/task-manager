@@ -25,10 +25,10 @@ export default function OverviewCard({ tasks }) {
   ];
 
   const cardStyle = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
-    borderRadius: theme.radius.lg,
-    padding: '20px',
+    background: theme.bgSecondary,
+    border: `0.5px solid ${theme.border}`,
+    borderRadius: theme.radius.md,
+    padding: '14px',
   };
 
   const titleStyle = {
@@ -37,14 +37,14 @@ export default function OverviewCard({ tasks }) {
     color: theme.textTertiary,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
-    marginBottom: 14,
+    marginBottom: 10,
   };
 
   const chartRowStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: 16,
-    marginBottom: 12,
+    gap: 12,
+    marginBottom: 10,
   };
 
   const legendStyle = {
@@ -73,17 +73,17 @@ export default function OverviewCard({ tasks }) {
   const progressText = {
     fontSize: theme.font.bodySmall,
     color: theme.textTertiary,
-    marginBottom: 6,
+    marginBottom: 4,
     textAlign: 'center',
   };
 
   const trackStyle = {
     width: '100%',
-    height: 5,
+    height: 4,
     background: theme.bgTertiary,
     borderRadius: theme.radius.full,
     overflow: 'hidden',
-    marginBottom: 16,
+    marginBottom: 10,
   };
 
   const fillStyle = {

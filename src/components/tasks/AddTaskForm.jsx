@@ -46,24 +46,24 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
 
   return (
     <div style={{
-      padding: '16px 20px', borderRadius: theme.radius.lg, border: `1px solid ${theme.border}`,
-      background: theme.surface,
+      padding: '14px', borderRadius: theme.radius.md, border: `0.5px solid ${theme.border}`,
+      background: theme.bgSecondary,
     }}>
       <div style={sectionLabel}>ADD TASK</div>
       <form onSubmit={handleSubmit}>
         <input ref={inputRef} value={text} onChange={e => setText(e.target.value)}
           placeholder="What needs to be done?" style={{
-            width: '100%', padding: '12px 14px', borderRadius: theme.radius.md,
+            width: '100%', padding: '10px 12px', borderRadius: theme.radius.sm,
             border: `1px solid ${theme.border}`, background: theme.bg,
             color: theme.textPrimary, fontSize: theme.font.body, outline: 'none',
-            marginBottom: 14, boxSizing: 'border-box',
+            marginBottom: 10, boxSizing: 'border-box',
           }} />
 
-        <div style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 10 }}>
           <TaskColorPicker value={colorId} onChange={setColorId} />
         </div>
 
-        <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
           {priorities.map(p => {
             const key = p.toLowerCase();
             const active = priority === key;
@@ -91,7 +91,7 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
           })}
         </div>
 
-        <div style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
           <div style={{ flex: 1 }}>
             <div style={fieldLabel}>Duration</div>
             <select value={duration} onChange={e => setDuration(Number(e.target.value))}
@@ -122,7 +122,7 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
         </div>
 
         <button type="submit" style={{
-          width: '100%', padding: '10px 16px', borderRadius: theme.radius.md,
+          width: '100%', padding: '8px 14px', borderRadius: theme.radius.sm,
           background: theme.accentBtn, color: theme.accentBtnText,
           fontWeight: 600, fontSize: theme.font.body,
           border: 'none', cursor: 'pointer', fontFamily: 'inherit',

@@ -10,39 +10,20 @@ export default function StatsGrid({ total, done, left, scheduled }) {
     { label: 'Scheduled', value: scheduled, color: theme.accent },
   ];
 
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 8,
-  };
-
-  const cellStyle = {
-    padding: '10px 12px',
-    borderRadius: theme.radius.md,
-    background: theme.bgTertiary,
-    textAlign: 'center',
-  };
-
-  const valueStyle = (color) => ({
-    fontSize: theme.font.headingLg,
-    fontWeight: 700,
-    color,
-    lineHeight: 1.2,
-  });
-
-  const labelStyle = {
-    fontSize: theme.font.label,
-    color: theme.textTertiary,
-    fontWeight: 500,
-    marginTop: 2,
-  };
-
   return (
-    <div style={gridStyle}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
       {items.map((item) => (
-        <div key={item.label} style={cellStyle}>
-          <div style={valueStyle(item.color)}>{item.value}</div>
-          <div style={labelStyle}>{item.label}</div>
+        <div key={item.label} style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '6px 10px', borderRadius: theme.radius.sm,
+          border: `0.5px solid ${theme.border}`, background: theme.bgTertiary,
+        }}>
+          <span style={{ fontSize: theme.font.bodySmall, color: theme.textSecondary, fontWeight: 500 }}>
+            {item.label}
+          </span>
+          <span style={{ fontSize: theme.font.body, fontWeight: 600, color: item.color }}>
+            {item.value}
+          </span>
         </div>
       ))}
     </div>
