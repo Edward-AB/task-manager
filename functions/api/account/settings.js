@@ -16,6 +16,7 @@ export async function onRequestGet({ env, data }) {
           date_format: 'en-GB',
           enable_sounds: 1,
           enable_celebrations: 1,
+          font_preference: 'default',
         },
       });
     }
@@ -34,6 +35,7 @@ export async function onRequestPut({ request, env, data }) {
     const allowed = [
       'work_hours_start', 'work_hours_end', 'default_task_duration',
       'week_starts_on', 'date_format', 'enable_sounds', 'enable_celebrations',
+      'font_preference',
     ];
 
     // Check if settings row exists

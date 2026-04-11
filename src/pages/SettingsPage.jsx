@@ -1,6 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '../hooks/useTheme.js';
 import { apiGet, apiPut } from '../api/client.js';
+
+const FONT_STACKS = {
+  default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, sans-serif",
+  classic: "Georgia, 'Times New Roman', Times, serif",
+};
 
 export default function SettingsPage() {
   const { theme, themeMode, toggleTheme } = useTheme();
@@ -17,6 +22,13 @@ export default function SettingsPage() {
       setLoading(false);
     })();
   }, []);
+
+  // Apply font preference to document
+  useEffect(() => {
+    if (settings?.font_preference) {
+      document.documentElement.style.fontFamily = FONT_STACKS[settings.font_preference] || FONT_STACKS.default;
+    }
+  }, [settings?.font_preference]);
 
   const save = async (updates) => {
     const next = { ...settings, ...updates };
@@ -60,6 +72,20 @@ export default function SettingsPage() {
             padding: '6px 16px', borderRadius: theme.radius.full, border: `1px solid ${theme.border}`,
             background: theme.accentBg, color: theme.accentText, fontWeight: 500, fontSize: theme.font.bodySmall,
           }}>{themeMode === 'forest' ? 'Dark' : 'Light'}</button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 }}>
+          <span style={{ color: theme.textSecondary }}>Font</span>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {[{ key: 'default', label: 'Default' }, { key: 'classic', label: 'Classic' }].map(f => (
+              <button key={f.key} onClick={() => save({ font_preference: f.key })} style={{
+                padding: '6px 16px', borderRadius: theme.radius.full, border: `1px solid ${theme.border}`,
+                background: (s.font_preference || 'default') === f.key ? theme.accentBg : 'transparent',
+                color: (s.font_preference || 'default') === f.key ? theme.accentText : theme.textTertiary,
+                fontWeight: 500, fontSize: theme.font.bodySmall,
+                fontFamily: f.key === 'classic' ? FONT_STACKS.classic : FONT_STACKS.default,
+              }}>{f.label}</button>
+            ))}
+          </div>
         </div>
       </div>
 
