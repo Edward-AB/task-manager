@@ -47,7 +47,12 @@ export default function TaskList({
         padding: 24, textAlign: 'center', borderRadius: theme.radius.md,
         border: `0.5px solid ${theme.border}`, background: theme.bgSecondary,
       }}>
-        <div style={{ fontSize: 32, marginBottom: 8 }}>{'\uD83D\uDCCB'}</div>
+        <svg width={32} height={32} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 8, opacity: 0.4 }}>
+          <rect x="4" y="2" width="16" height="20" rx="2" stroke={theme.textTertiary} strokeWidth="1.5"/>
+          <line x1="8" y1="7" x2="16" y2="7" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
+          <line x1="8" y1="11" x2="16" y2="11" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
+          <line x1="8" y1="15" x2="12" y2="15" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
+        </svg>
         <p style={{ color: theme.textTertiary, fontSize: theme.font.body }}>No tasks for this day</p>
         <p style={{ color: theme.textTertiary, fontSize: theme.font.bodySmall, marginTop: 4 }}>Add one above to get started</p>
       </div>

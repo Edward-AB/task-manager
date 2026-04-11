@@ -48,9 +48,10 @@ export default function CalendarEvent({ event, column, totalColumns }) {
       style={pillStyle}
       title={`${event.title} (${timeStr} - ${slotToTime(event.end_slot)})`}
     >
-      <span style={{ opacity: 0.8, flexShrink: 0 }}>
-        {'\uD83D\uDCC5'}
-      </span>
+      <svg width={10} height={10} viewBox="0 0 14 14" fill="none" style={{ opacity: 0.8, flexShrink: 0 }}>
+        <rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+        <path d="M1 5.5h12" stroke="currentColor" strokeWidth="1"/>
+      </svg>
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {event.title}
       </span>

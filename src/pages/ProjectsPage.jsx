@@ -135,7 +135,9 @@ export default function ProjectsPage() {
 
       {filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
+          <svg width={48} height={48} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 12, opacity: 0.4 }}>
+            <path d="M2 7V19a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-8l-2-2H4a2 2 0 00-2 2z" stroke={theme.textTertiary} strokeWidth="1.5" strokeLinejoin="round"/>
+          </svg>
           <p style={{ color: theme.textSecondary, marginBottom: 8, fontWeight: 500 }}>No projects yet</p>
           <p style={{ color: theme.textTertiary, fontSize: theme.font.bodySmall }}>Create your first project to organise your work</p>
         </div>

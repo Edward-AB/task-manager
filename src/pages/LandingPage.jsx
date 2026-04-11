@@ -2,19 +2,25 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme.js';
 import { useAuth } from '../hooks/useAuth.js';
 
+const SvgIcon = ({ d, size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d={d} />
+  </svg>
+);
+
 const features = [
-  { icon: '📅', title: 'Smart Scheduling', desc: 'Drag tasks onto a 24-hour timeline. Resize, reorder, and plan your day visually.' },
-  { icon: '🎯', title: 'Deadlines & Projects', desc: 'Track deadlines with progress pies. Organise work into colour-coded projects.' },
-  { icon: '⏱️', title: 'Focus Timer', desc: 'Built-in countdown timer with alarm. Stay focused on what matters.' },
-  { icon: '📊', title: 'Analytics & Streaks', desc: 'Track your productivity over time. Build streaks and see your progress.' },
-  { icon: '🌙', title: 'Dark Mode', desc: 'Easy on the eyes. Switch between forest light and dark themes.' },
-  { icon: '🎉', title: 'Celebrations', desc: 'Fireworks and sounds when you complete all tasks. Because you earned it.' },
+  { icon: <SvgIcon d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />, title: 'Smart Scheduling', desc: 'Drag tasks onto a 24-hour timeline. Resize, reorder, and plan your day visually.' },
+  { icon: <SvgIcon d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-14v4l3 3" />, title: 'Deadlines & Projects', desc: 'Track deadlines with progress pies. Organise work into colour-coded projects.' },
+  { icon: <SvgIcon d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />, title: 'Focus Timer', desc: 'Built-in countdown timer with alarm. Stay focused on what matters.' },
+  { icon: <SvgIcon d="M3 3v18h18M7 17V13m4 4V9m4 8V5m4 12V7" />, title: 'Analytics & Streaks', desc: 'Track your productivity over time. Build streaks and see your progress.' },
+  { icon: <SvgIcon d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />, title: 'Dark Mode', desc: 'Easy on the eyes. Switch between forest light and dark themes.' },
+  { icon: <SvgIcon d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />, title: 'Celebrations', desc: 'Fireworks and sounds when you complete all tasks. Because you earned it.' },
 ];
 
 const personas = [
-  { icon: '🎓', title: 'Student', desc: 'Track assignments, revision sessions, and deadlines across all your modules.' },
-  { icon: '💼', title: 'Professional', desc: 'Own your workday. Schedule meetings, deep work, and personal tasks.' },
-  { icon: '👥', title: 'Team Lead', desc: 'Manage project timelines and keep every deliverable on track.' },
+  { icon: <SvgIcon d="M12 14l9-5-9-5-9 5 9 5zm0 0v7m-9-5l9 5 9-5" />, title: 'Student', desc: 'Track assignments, revision sessions, and deadlines across all your modules.' },
+  { icon: <SvgIcon d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 3h-8v4h8V3z" />, title: 'Professional', desc: 'Own your workday. Schedule meetings, deep work, and personal tasks.' },
+  { icon: <SvgIcon d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m22 0v-2a3 3 0 00-2-2.83M13 7a4 4 0 11-8 0 4 4 0 018 0zm4 0a3 3 0 11-6 0" />, title: 'Team Lead', desc: 'Manage project timelines and keep every deliverable on track.' },
 ];
 
 export default function LandingPage() {

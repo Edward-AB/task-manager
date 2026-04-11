@@ -97,9 +97,9 @@ export default function WelcomeStep({ username, onNext }) {
   };
 
   const features = [
-    { icon: '📋', text: 'Plan your day with time-blocked scheduling' },
-    { icon: '🎯', text: 'Track deadlines and project progress' },
-    { icon: '📊', text: 'See your productivity stats and streaks' },
+    { icon: '\u2022', text: 'Plan your day with time-blocked scheduling' },
+    { icon: '\u2022', text: 'Track deadlines and project progress' },
+    { icon: '\u2022', text: 'See your productivity stats and streaks' },
   ];
 
   return (

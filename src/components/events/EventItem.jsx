@@ -32,9 +32,12 @@ export default function EventItem({ event, onEdit, onDelete }) {
       onMouseLeave={() => setHover(false)}
     >
       {/* Icon */}
-      <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }} aria-hidden>
-        {'\uD83D\uDCC5'}
-      </span>
+      <svg width={12} height={12} viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 1 }}>
+        <rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+        <path d="M1 5.5h12" stroke="currentColor" strokeWidth="1"/>
+        <line x1="4" y1="1" x2="4" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+        <line x1="10" y1="1" x2="10" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      </svg>
 
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>

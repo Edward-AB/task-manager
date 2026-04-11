@@ -76,7 +76,7 @@ export default function StreakCounter({ currentStreak, longestStreak }) {
     return (
       <div style={containerStyle}>
         <div style={fireRowStyle}>
-          <span style={{ fontSize: 24, opacity: 0.4 }}>🔥</span>
+          <span style={{ fontSize: 24, opacity: 0.4 }}><svg width={24} height={24} viewBox="0 0 24 24" fill="none"><path d="M12 2c0 4-4 6-4 10a4 4 0 108 0c0-4-4-6-4-10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg></span>
           <span style={numberStyle}>0</span>
         </div>
         <div style={labelStyle}>day streak</div>
@@ -95,7 +95,7 @@ export default function StreakCounter({ currentStreak, longestStreak }) {
   return (
     <div style={containerStyle}>
       <div style={fireRowStyle}>
-        <span style={{ fontSize: 28 }}>🔥</span>
+        <span style={{ fontSize: 28 }}><svg width={24} height={24} viewBox="0 0 24 24" fill="none"><path d="M12 2c0 4-4 6-4 10a4 4 0 108 0c0-4-4-6-4-10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg></span>
         <span style={numberStyle}>{displayCount}</span>
       </div>
       <div style={labelStyle}>

@@ -3,19 +3,19 @@ import { useTheme } from '../../hooks/useTheme.js';
 const ROLES = [
   {
     id: 'student',
-    emoji: '🎓',
+    emoji: '\u25CB',
     name: 'Student',
     desc: 'Manage assignments, study sessions, and exam prep',
   },
   {
     id: 'professional',
-    emoji: '💼',
+    emoji: '\u25CB',
     name: 'Professional',
     desc: 'Organize work tasks, meetings, and project deadlines',
   },
   {
     id: 'team_lead',
-    emoji: '👥',
+    emoji: '\u25CB',
     name: 'Team lead',
     desc: 'Coordinate team tasks, track deliverables, and plan sprints',
   },

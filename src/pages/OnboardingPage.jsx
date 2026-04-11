@@ -5,9 +5,9 @@ import { useAuth } from '../hooks/useAuth.js';
 import { apiPut, apiPost } from '../api/client.js';
 
 const ROLES = [
-  { key: 'student', emoji: '\uD83C\uDFEB', label: 'Student', desc: 'School, homework, study sessions', startHour: 9, endHour: 21 },
-  { key: 'professional', emoji: '\uD83D\uDCBC', label: 'Professional', desc: 'Work, meetings, projects', startHour: 8, endHour: 17 },
-  { key: 'team_lead', emoji: '\uD83D\uDC65', label: 'Team Lead', desc: 'Manage people and deliverables', startHour: 8, endHour: 18 },
+  { key: 'student', emoji: '\u25CB', label: 'Student', desc: 'School, homework, study sessions', startHour: 9, endHour: 21 },
+  { key: 'professional', emoji: '\u25CB', label: 'Professional', desc: 'Work, meetings, projects', startHour: 8, endHour: 17 },
+  { key: 'team_lead', emoji: '\u25CB', label: 'Team Lead', desc: 'Manage people and deliverables', startHour: 8, endHour: 18 },
 ];
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);

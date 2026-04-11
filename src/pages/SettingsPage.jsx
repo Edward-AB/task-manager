@@ -59,7 +59,7 @@ export default function SettingsPage() {
           <button onClick={toggleTheme} style={{
             padding: '6px 16px', borderRadius: theme.radius.full, border: `1px solid ${theme.border}`,
             background: theme.accentBg, color: theme.accentText, fontWeight: 500, fontSize: theme.font.bodySmall,
-          }}>{themeMode === 'forest' ? '🌙 Dark' : '☀️ Light'}</button>
+          }}>{themeMode === 'forest' ? 'Dark' : 'Light'}</button>
         </div>
       </div>
 
