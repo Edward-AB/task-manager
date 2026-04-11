@@ -160,6 +160,20 @@ export default function AccountPage() {
         </form>
       </div>
 
+      {/* Team */}
+      <div style={sectionStyle}>
+        <h2 style={{ fontSize: theme.font.heading, fontWeight: 500, color: theme.textPrimary, marginBottom: 6 }}>Team</h2>
+        <p style={{ fontSize: theme.font.bodySmall, color: theme.textTertiary, lineHeight: 1.5 }}>
+          Team workspaces, shared projects, and collaboration features are coming soon.
+          Upgrade to Pro + Team when available to unlock these features.
+        </p>
+        <div style={{
+          marginTop: 10, padding: '6px 14px', borderRadius: theme.radius.sm,
+          background: theme.accentBg, color: theme.accentText, fontSize: theme.font.bodySmall,
+          fontWeight: 500, display: 'inline-block',
+        }}>Coming soon</div>
+      </div>
+
       {/* Danger zone */}
       <div style={{
         padding: 20, borderRadius: theme.radius.md, border: `1px solid ${theme.danger}40`,

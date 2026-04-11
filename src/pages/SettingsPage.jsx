@@ -162,6 +162,19 @@ export default function SettingsPage() {
           </select>
         </div>
       </div>
+
+      {/* Team */}
+      <div style={sectionStyle}>
+        <h2 style={{ fontSize: theme.font.heading, fontWeight: 500, color: theme.textPrimary, marginBottom: 8 }}>Team</h2>
+        <p style={{ fontSize: theme.font.bodySmall, color: theme.textTertiary, lineHeight: 1.5 }}>
+          Team workspaces, shared projects, and collaboration are coming soon.
+        </p>
+        <div style={{
+          marginTop: 10, padding: '6px 14px', borderRadius: theme.radius.sm,
+          background: theme.accentBg, color: theme.accentText, fontSize: theme.font.bodySmall,
+          fontWeight: 500, display: 'inline-block',
+        }}>Coming soon</div>
+      </div>
     </div>
   );
 }
