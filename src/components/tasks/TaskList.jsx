@@ -34,7 +34,7 @@ export default function TaskList({
   const handleDragOver = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
   const handleDrop = (e) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData('taskId') || e.dataTransfer.getData('text/plain');
+    const taskId = e.dataTransfer.getData('text/plain');
     if (taskId && onDrop) onDrop(taskId, null);
   };
 
