@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="currentColor" opacity="0.12">
+  <!-- Three pine tree silhouettes -->
+  <polygon points="60,180 80,60 100,180"/>
+  <polygon points="55,180 80,90 105,180"/>
+  <polygon points="50,180 80,120 110,180"/>
+  <rect x="75" y="180" width="10" height="20"/>
+
+  <polygon points="120,180 140,80 160,180"/>
+  <polygon points="115,180 140,110 165,180"/>
+  <rect x="135" y="180" width="10" height="20"/>
+
+  <polygon points="155,185 170,110 185,185"/>
+  <polygon points="150,185 170,130 190,185"/>
+  <rect x="165" y="185" width="10" height="15"/>
+</svg>

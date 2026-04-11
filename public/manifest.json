@@ -1,0 +1,17 @@
+{
+  "name": "PineTask",
+  "short_name": "PineTask",
+  "description": "Plan your day. Own your time.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0F1A0A",
+  "theme_color": "#27500A",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

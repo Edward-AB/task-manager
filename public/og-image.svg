@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F1A0A"/>
+      <stop offset="100%" stop-color="#1A2E12"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Pine trees -->
+  <g opacity="0.15" fill="#4A7C2E">
+    <polygon points="900,500 950,350 1000,500"/>
+    <polygon points="940,500 980,380 1020,500"/>
+    <polygon points="1050,520 1100,370 1150,520"/>
+  </g>
+  <!-- Logo text -->
+  <text x="100" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#E8E4D9">
+    <tspan fill="#4A7C2E">Pine</tspan><tspan fill="#E8E4D9">Task</tspan>
+  </text>
+  <!-- Tagline -->
+  <text x="100" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#9CAF88" opacity="0.9">
+    Plan your day. Own your time.
+  </text>
+  <!-- Feature pills -->
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#C8C4B8">
+    <rect x="100" y="380" width="160" height="36" rx="18" fill="#27500A" opacity="0.6"/>
+    <text x="130" y="403">Smart Scheduling</text>
+    <rect x="280" y="380" width="120" height="36" rx="18" fill="#27500A" opacity="0.6"/>
+    <text x="305" y="403">Focus Timer</text>
+    <rect x="420" y="380" width="110" height="36" rx="18" fill="#27500A" opacity="0.6"/>
+    <text x="443" y="403">Analytics</text>
+    <rect x="550" y="380" width="130" height="36" rx="18" fill="#27500A" opacity="0.6"/>
+    <text x="572" y="403">Dark Mode</text>
+  </g>
+  <!-- URL -->
+  <text x="100" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#6B8F5B" opacity="0.7">
+    pinetask.com
+  </text>
+</svg>
