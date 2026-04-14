@@ -28,19 +28,24 @@ export default function AppShell({ children }) {
   const shellStyle = {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100vh',
+    height: '100vh',
+    overflow: 'hidden',
     background: theme.bg,
   };
 
   const bodyStyle = {
     display: 'flex',
     flex: 1,
+    minHeight: 0,
     paddingTop: 52, // header height
   };
 
   const mainStyle = {
     flex: 1,
     minWidth: 0,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
     padding: narrow ? '12px' : '12px 16px',
     marginLeft: narrow ? 0 : sidebarWidth,
     transition: 'margin-left 200ms ease',

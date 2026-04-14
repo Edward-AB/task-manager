@@ -56,7 +56,9 @@ export default function DaySchedule({
     // Update ghost preview
     const taskId = dragInfo.current?.id || e.dataTransfer.getData('text/plain');
     if (!taskId && !dragInfo.current) return;
-    const slot = getSlot(e);
+    const rawSlot = getSlot(e);
+    const offset = dragInfo.current?.grabOffset || 0;
+    const slot = Math.max(0, rawSlot - offset);
     const dur = dragInfo.current?.duration || dragInfo.current?.dur || DEFAULT_TASK_DURATION;
     const deadlineId = dragInfo.current?.deadlineId || dragInfo.current?.deadline_id || null;
     setGhost({ slot, dur, deadlineId });
@@ -70,7 +72,9 @@ export default function DaySchedule({
       dragInfo.current = null;
       return;
     }
-    const slot = getSlot(e);
+    const rawSlot = getSlot(e);
+    const offset = dragInfo.current?.grabOffset || 0;
+    const slot = Math.max(0, rawSlot - offset);
     onTaskDrop?.(taskId, slot);
     setGhost(null);
     dragInfo.current = null;
@@ -94,7 +98,11 @@ export default function DaySchedule({
   };
 
   const handleTaskDragStart = (e, task) => {
-    dragInfo.current = task;
+    // Calculate grab offset: how far from the task's top the user clicked
+    const cursorSlot = getSlot(e);
+    const taskSlot = task.slot ?? 0;
+    const grabOffset = cursorSlot - taskSlot;
+    dragInfo.current = { ...task, grabOffset };
     e.dataTransfer.setData('text/plain', task.id);
     e.dataTransfer.effectAllowed = 'move';
     // v1: custom small drag ghost (lines 498-504)
