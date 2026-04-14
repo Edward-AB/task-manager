@@ -4,7 +4,7 @@ export default function TaskColorPicker({ value, onChange }) {
   const { theme } = useTheme();
 
   return (
-    <div style={{ display: 'flex', gap: 6 }}>
+    <div style={{ display: 'flex', gap: 5 }}>
       {theme.taskColor.map(c => (
         <button key={c.id} type="button" onClick={() => onChange(c.id)} style={{
           flex: 1, height: 28, borderRadius: 20, background: c.bg,

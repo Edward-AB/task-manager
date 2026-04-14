@@ -16,12 +16,14 @@ export default function OverviewCard({ tasks, embedded }) {
   const highCount = remaining.filter((t) => t.priority === 'high').length;
   const medCount = remaining.filter((t) => t.priority === 'medium').length;
   const lowCount = remaining.filter((t) => t.priority === 'low').length;
+  const noneCount = remaining.filter((t) => !t.priority).length;
 
   const segments = [
     { value: done, color: theme.chartDone, label: 'Done' },
     { value: highCount, color: theme.chartHigh, label: 'High' },
     { value: medCount, color: theme.chartMedium, label: 'Medium' },
     { value: lowCount, color: theme.chartLow, label: 'Low' },
+    { value: noneCount, color: theme.chartNone, label: 'None' },
   ];
 
   const cardStyle = {
@@ -43,14 +45,13 @@ export default function OverviewCard({ tasks, embedded }) {
   const chartRowStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 10,
+    gap: 14,
   };
 
   const legendStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 6,
+    gap: 5,
     flex: 1,
   };
 
@@ -58,7 +59,7 @@ export default function OverviewCard({ tasks, embedded }) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: theme.font.bodySmall,
+    fontSize: 12,
     color: theme.textSecondary,
   };
 
@@ -70,27 +71,20 @@ export default function OverviewCard({ tasks, embedded }) {
     flexShrink: 0,
   });
 
-  const progressText = {
-    fontSize: theme.font.bodySmall,
-    color: theme.textTertiary,
-    marginBottom: 4,
-    textAlign: 'center',
-  };
-
   const trackStyle = {
     width: '100%',
     height: 4,
-    background: theme.bgTertiary,
-    borderRadius: theme.radius.full,
+    background: theme.border,
+    borderRadius: 4,
     overflow: 'hidden',
-    marginBottom: 10,
+    marginTop: 4,
   };
 
   const fillStyle = {
     width: `${pct}%`,
     height: '100%',
-    background: theme.accent,
-    borderRadius: theme.radius.full,
+    background: '#2D9B6F',
+    borderRadius: 4,
     transition: 'width 0.4s ease',
   };
 
@@ -98,22 +92,22 @@ export default function OverviewCard({ tasks, embedded }) {
     <>
       <div style={titleStyle}>OVERVIEW</div>
       <div style={chartRowStyle}>
-        <PieChart segments={segments} size={90} centerCount={total} />
+        <PieChart segments={segments} size={108} centerCount={total} />
         <div style={legendStyle}>
           {segments.filter((s) => s.value > 0).map((s) => (
             <div key={s.label} style={legendItem}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                 <span style={legendDot(s.color)} />
                 {s.label}
               </span>
-              <span style={{ fontWeight: 600, color: theme.textPrimary }}>{s.value}</span>
+              <span style={{ fontWeight: 500, color: theme.textPrimary }}>{s.value}</span>
             </div>
           ))}
+          <div style={trackStyle}>
+            <div style={fillStyle} />
+          </div>
+          <div style={{ fontSize: 11, color: theme.textTertiary }}>{pct}% complete</div>
         </div>
-      </div>
-      <div style={progressText}>{pct}% complete</div>
-      <div style={trackStyle}>
-        <div style={fillStyle} />
       </div>
       <StatsGrid total={total} done={done} left={left} scheduled={scheduled} />
     </>

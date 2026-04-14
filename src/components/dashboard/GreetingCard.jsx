@@ -19,20 +19,27 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
     background: theme.bgSecondary,
     border: `0.5px solid ${theme.border}`,
     borderRadius: theme.radius.md,
-    padding: '14px',
+    padding: '16px',
+    flexShrink: 0,
+  };
+
+  const headerRow = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 14,
   };
 
   const greetStyle = {
     fontSize: theme.font.heading,
-    fontWeight: 700,
+    fontWeight: 500,
     color: theme.textPrimary,
-    marginBottom: 4,
+    marginBottom: 2,
   };
 
   const subtitleStyle = {
     fontSize: theme.font.bodySmall,
     color: theme.textSecondary,
-    marginBottom: 10,
   };
 
   const toggleWrap = {
@@ -40,41 +47,36 @@ export default function GreetingCard({ date, onDateChange, tasks, calView, onCal
     border: `0.5px solid ${theme.border}`,
     borderRadius: 8,
     overflow: 'hidden',
-    marginBottom: 10,
+    flexShrink: 0,
+    marginLeft: 8,
   };
 
   const toggleBtn = (active) => ({
-    flex: 1,
     padding: '4px 9px',
-    border: 'none',
-    borderRadius: 0,
+    fontSize: 11,
+    cursor: 'pointer',
     background: active ? theme.accent : 'transparent',
     color: active ? theme.accentBtnText : theme.textSecondary,
-    fontSize: 11,
+    border: 'none',
     fontWeight: active ? 500 : 400,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    boxShadow: 'none',
-    transition: `all ${theme.transition}`,
   });
 
   return (
     <div style={cardStyle}>
-      <div style={greetStyle}>
-        {getGreeting()}
-      </div>
-      <div style={subtitleStyle}>
-        {total > 0 ? `${done} of ${total} tasks done today` : 'No tasks for today'}
-      </div>
-
-      {/* Week / Month toggle */}
-      <div style={toggleWrap}>
-        <button style={toggleBtn(calView === 'week')} onClick={() => onCalViewChange('week')}>
-          Week
-        </button>
-        <button style={toggleBtn(calView === 'month')} onClick={() => onCalViewChange('month')}>
-          Month
-        </button>
+      <div style={headerRow}>
+        <div>
+          <div style={greetStyle}>{getGreeting()}</div>
+          <div style={subtitleStyle}>
+            {total > 0 ? `${done} of ${total} tasks done today` : 'Nothing planned yet'}
+          </div>
+        </div>
+        <div style={toggleWrap}>
+          {['week', 'month'].map((v) => (
+            <button key={v} style={toggleBtn(calView === v)} onClick={() => onCalViewChange(v)}>
+              {v.charAt(0).toUpperCase() + v.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {calView === 'week' ? (

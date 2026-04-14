@@ -64,39 +64,6 @@ export default function DaySchedule({
     onSlotClick?.(slot);
   };
 
-  const cardStyle = {
-    background: theme.bgSecondary,
-    border: `0.5px solid ${theme.border}`,
-    borderRadius: theme.radius.md,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-  };
-
-  const headerStyle = {
-    padding: '10px 14px',
-    borderBottom: `0.5px solid ${theme.border}`,
-    fontSize: theme.font.bodySmall,
-    fontWeight: 600,
-    color: theme.textSecondary,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  };
-
-  const scrollAreaStyle = {
-    overflowY: 'auto',
-    overscrollBehavior: 'contain',
-    height: 'calc(100vh - 120px)',
-    position: 'relative',
-  };
-
-  const timelineStyle = {
-    position: 'relative',
-    height: TOTAL_HEIGHT,
-    background: theme.calBg,
-  };
-
   // Working hours background
   const workStart = DEFAULT_WORK_START;
   const workEnd = DEFAULT_WORK_END;
@@ -104,21 +71,47 @@ export default function DaySchedule({
   const workHeight = ((workEnd - workStart) / SLOTS_PER_HOUR) * HOUR_HEIGHT;
 
   return (
-    <div style={cardStyle}>
-      <div style={headerStyle}>
-        <span style={{ whiteSpace: 'nowrap', fontSize: theme.font.label, letterSpacing: '0.06em' }}>DAY SCHEDULE &mdash; DRAG TASKS HERE</span>
-        <span style={{ color: theme.textTertiary, fontWeight: 400 }}>
-          {scheduledTasks.length} task{scheduledTasks.length !== 1 ? 's' : ''}
-        </span>
+    <div style={{
+      background: theme.bgSecondary,
+      border: `0.5px solid ${theme.border}`,
+      borderRadius: 14,
+      padding: '16px 18px',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    }}>
+      {/* Section label matching v1 SL style */}
+      <div style={{
+        fontSize: theme.font.label,
+        fontWeight: 500,
+        color: theme.textTertiary,
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        marginBottom: 10,
+      }}>
+        Day schedule &mdash; drag tasks here
       </div>
+
+      {/* Scroll container */}
       <div
         ref={scrollRef}
-        style={scrollAreaStyle}
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'scroll',
+          borderRadius: 12,
+          border: `0.5px solid ${theme.border}`,
+          background: theme.calBg,
+        }}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={handleClick}
       >
-        <div style={timelineStyle}>
+        <div style={{
+          position: 'relative',
+          height: TOTAL_HEIGHT,
+          background: theme.calBg,
+        }}>
           {/* Working hours highlight */}
           <div
             style={{

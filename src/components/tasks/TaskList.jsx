@@ -10,6 +10,7 @@ export default function TaskList({
   const { theme } = useTheme();
   const dayStr = dateKey(date);
   const todayStr = dateKey(new Date());
+  const [overUnsch, setOverUnsch] = useState(false);
 
   // Tasks for this day
   const dayTasks = (tasks || []).filter((t) => t.date === dayStr);
@@ -24,16 +25,15 @@ export default function TaskList({
   const unscheduled = dayTasks.filter((t) => !(t.deadlineId || t.deadline_id) && t.slot == null);
   const scheduled = dayTasks.filter((t) => !(t.deadlineId || t.deadline_id) && t.slot != null).sort((a, b) => a.slot - b.slot);
 
-  const sectionLabel = (text, color) => (
-    <div style={{
-      fontSize: theme.font.label, fontWeight: 500, color: color || theme.textTertiary,
-      letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8, marginTop: 4,
-    }}>{text}</div>
-  );
-
-  const handleDragOver = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setOverUnsch(true);
+  };
+  const handleDragLeave = () => setOverUnsch(false);
   const handleDrop = (e) => {
     e.preventDefault();
+    setOverUnsch(false);
     const taskId = e.dataTransfer.getData('text/plain');
     if (taskId && onDrop) onDrop(taskId, null);
   };
@@ -41,83 +41,105 @@ export default function TaskList({
   const itemProps = { deadlines, onToggle, onDelete, onNote, onUpdate, onMove };
 
   const totalVisible = overdueTasks.length + dayTasks.length;
-  if (totalVisible === 0) {
-    return (
-      <div style={{
-        padding: 24, textAlign: 'center', borderRadius: theme.radius.md,
-        border: `0.5px solid ${theme.border}`, background: theme.bgSecondary,
-      }}>
-        <svg width={32} height={32} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 8, opacity: 0.4 }}>
-          <rect x="4" y="2" width="16" height="20" rx="2" stroke={theme.textTertiary} strokeWidth="1.5"/>
-          <line x1="8" y1="7" x2="16" y2="7" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
-          <line x1="8" y1="11" x2="16" y2="11" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
-          <line x1="8" y1="15" x2="12" y2="15" stroke={theme.textTertiary} strokeWidth="1.2" strokeLinecap="round"/>
-        </svg>
-        <p style={{ color: theme.textTertiary, fontSize: theme.font.body }}>No tasks for this day</p>
-        <p style={{ color: theme.textTertiary, fontSize: theme.font.bodySmall, marginTop: 4 }}>Add one above to get started</p>
+
+  // Section label matching v1: fontSize 10, fontWeight 500, uppercase, letterSpacing 0.08em
+  const sectionLabel = (text, color) => (
+    <div style={{
+      fontSize: theme.font.label, fontWeight: 500, color: color || theme.textTertiary,
+      letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6,
+    }}>{text}</div>
+  );
+
+  // Divider between sections matching v1
+  const divider = () => (
+    <div style={{ height: '0.5px', background: theme.hourRule || theme.borderLight, margin: '8px 0' }} />
+  );
+
+  // Track which sections exist so we can add dividers between them
+  const sections = [];
+
+  if (overdueTasks.length > 0) {
+    sections.push(
+      <div key="overdue">
+        {sectionLabel(`Overdue \u00B7 ${overdueTasks.length}`, theme.danger)}
+        {overdueTasks.map((t) => (
+          <TaskItem key={t.id} task={t} {...itemProps} />
+        ))}
       </div>
     );
   }
 
-  const sectionWrap = {
-    borderRadius: theme.radius.md,
-    border: `0.5px solid ${theme.border}`,
-    background: theme.bgSecondary,
-    padding: 10,
-  };
+  if (deadlineTasks.length > 0) {
+    sections.push(
+      <div key="deadline">
+        {sectionLabel('Deadline tasks scheduled today')}
+        <DeadlineTaskCards deadlineTasks={deadlineTasks} deadlines={deadlines} theme={theme} itemProps={itemProps} />
+      </div>
+    );
+  }
 
-  const listGap = { display: 'flex', flexDirection: 'column', gap: 6 };
+  // Empty state or unscheduled section
+  if (totalVisible === 0) {
+    sections.push(
+      <div key="empty" style={{ fontSize: 12, color: theme.textTertiary, padding: '4px 0', marginBottom: 6 }}>
+        Add a task above to get started.
+      </div>
+    );
+  } else if (unscheduled.length === 0 && dayTasks.length > 0) {
+    sections.push(
+      <div key="all-scheduled" style={{ fontSize: 12, color: theme.textTertiary, padding: '4px 0', marginBottom: 6 }}>
+        All tasks scheduled!
+      </div>
+    );
+  } else if (unscheduled.length > 0) {
+    sections.push(
+      <div key="unscheduled">
+        {sectionLabel(`Unscheduled \u00B7 ${unscheduled.length}`)}
+        {unscheduled.map((t) => (
+          <TaskItem key={t.id} task={t} {...itemProps} />
+        ))}
+      </div>
+    );
+  }
 
+  if (scheduled.length > 0) {
+    sections.push(
+      <div key="scheduled">
+        {sectionLabel(`Scheduled \u00B7 ${scheduled.length}`)}
+        {scheduled.map((t) => (
+          <TaskItem key={t.id} task={t} {...itemProps} />
+        ))}
+      </div>
+    );
+  }
+
+  // Render all sections inside ONE card, with dividers between them
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {overdueTasks.length > 0 && (
-        <div style={sectionWrap}>
-          {sectionLabel(`Overdue (${overdueTasks.length})`, theme.danger)}
-          <div style={listGap}>
-            {overdueTasks.map((t) => (
-              <TaskItem key={t.id} task={t} {...itemProps} />
-            ))}
-          </div>
+    <div
+      className="col-scroll"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      style={{
+        overflowY: 'auto',
+        maxHeight: 'calc(100vh - 280px)',
+        border: `0.5px solid ${overUnsch ? theme.accent : theme.border}`,
+        borderRadius: 14,
+        padding: '12px 14px',
+        background: theme.bgSecondary,
+      }}
+    >
+      {sections.map((section, i) => (
+        <div key={section.key}>
+          {i > 0 && divider()}
+          {section}
         </div>
-      )}
-
-      {deadlineTasks.length > 0 && (
-        <div style={sectionWrap}>
-          {sectionLabel(`DEADLINE TASKS SCHEDULED TODAY`)}
-          <DeadlineTaskCards deadlineTasks={deadlineTasks} deadlines={deadlines} theme={theme} itemProps={itemProps} />
-        </div>
-      )}
-
-      {(unscheduled.length > 0 || scheduled.length > 0) && (
-        <div style={sectionWrap} onDragOver={handleDragOver} onDrop={handleDrop}>
-          {unscheduled.length > 0 && (
-            <>
-              {sectionLabel(`UNSCHEDULED \u00B7 ${unscheduled.length}`)}
-              <div style={listGap}>
-                {unscheduled.map((t) => (
-                  <TaskItem key={t.id} task={t} {...itemProps} />
-                ))}
-              </div>
-            </>
-          )}
-
-          {scheduled.length > 0 && (
-            <div style={{ marginTop: unscheduled.length > 0 ? 16 : 0 }}>
-              {sectionLabel(`SCHEDULED \u00B7 ${scheduled.length}`)}
-              <div style={listGap}>
-                {scheduled.map((t) => (
-                  <TaskItem key={t.id} task={t} {...itemProps} />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      ))}
     </div>
   );
 }
 
-/** Grouped deadline cards — show deadline as collapsed card, expand to see tasks */
+/** Grouped deadline cards -- show deadline as collapsed card, expand to see tasks */
 function DeadlineTaskCards({ deadlineTasks, deadlines, theme, itemProps }) {
   const [expanded, setExpanded] = useState({});
 
@@ -138,14 +160,14 @@ function DeadlineTaskCards({ deadlineTasks, deadlines, theme, itemProps }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <div>
       {Object.entries(groups).map(([dlId, tasks]) => {
         const dl = (deadlines || []).find((d) => d.id === dlId);
         const dlc = dl ? theme.deadline[(dl.color_idx ?? 0) % theme.deadline.length] : null;
         const isOpen = expanded[dlId];
 
         return (
-          <div key={dlId}>
+          <div key={dlId} style={{ marginBottom: 5 }}>
             <button
               onClick={() => setExpanded((e) => ({ ...e, [dlId]: !e[dlId] }))}
               style={{
@@ -165,14 +187,14 @@ function DeadlineTaskCards({ deadlineTasks, deadlines, theme, itemProps }) {
               </span>
               <span style={{ fontSize: theme.font.label, color: dlc?.text || theme.textTertiary, opacity: 0.7 }}>
                 {tasks.length} task{tasks.length !== 1 ? 's' : ''}
-                {dl && daysLeft(dl) && ` · ${daysLeft(dl)}`}
+                {dl && daysLeft(dl) && ` \u00B7 ${daysLeft(dl)}`}
               </span>
               <span style={{ fontSize: 10, color: dlc?.text || theme.textTertiary, transition: 'transform 200ms', transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }}>
                 {'\u25BC'}
               </span>
             </button>
             {isOpen && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingLeft: 12 }}>
+              <div style={{ marginTop: 4, paddingLeft: 12 }}>
                 {tasks.map((t) => (
                   <TaskItem key={t.id} task={t} {...itemProps} />
                 ))}

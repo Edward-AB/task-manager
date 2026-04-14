@@ -30,31 +30,31 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
 
   const sectionLabel = {
     fontSize: theme.font.label, fontWeight: 500, color: theme.textTertiary,
-    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12,
+    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10,
   };
 
   const selectStyle = {
     flex: 1,
-    padding: '8px 10px', borderRadius: theme.radius.sm, border: `1px solid ${theme.border}`,
-    background: theme.bg, color: theme.textSecondary, fontSize: theme.font.body,
+    padding: '7px 8px', borderRadius: 8, border: `0.5px solid ${theme.border}`,
+    background: theme.bg, color: theme.textSecondary, fontSize: 12,
     fontFamily: 'inherit',
   };
 
   const fieldLabel = {
-    fontSize: theme.font.label, fontWeight: 500, color: theme.textTertiary, marginBottom: 4,
+    fontSize: 11, fontWeight: 500, color: theme.textTertiary, marginBottom: 4,
   };
 
   return (
     <div style={{
-      padding: '14px', borderRadius: theme.radius.md, border: `0.5px solid ${theme.border}`,
+      padding: '16px 18px', borderRadius: theme.radius.md, border: `0.5px solid ${theme.border}`,
       background: theme.bgSecondary,
     }}>
       <div style={sectionLabel}>ADD TASK</div>
       <form onSubmit={handleSubmit}>
         <input ref={inputRef} value={text} onChange={e => setText(e.target.value)}
           placeholder="What needs to be done?" style={{
-            width: '100%', padding: '10px 12px', borderRadius: theme.radius.sm,
-            border: `1px solid ${theme.border}`, background: theme.bg,
+            width: '100%', padding: '8px 11px', borderRadius: 8,
+            border: `0.5px solid ${theme.border}`, background: theme.bg,
             color: theme.textPrimary, fontSize: theme.font.body, outline: 'none',
             marginBottom: 10, boxSizing: 'border-box',
           }} />
@@ -63,7 +63,7 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
           <TaskColorPicker value={colorId} onChange={setColorId} />
         </div>
 
-        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+        <div style={{ display: 'flex', gap: 5, marginBottom: 10 }}>
           {priorities.map(p => {
             const key = p.toLowerCase();
             const active = priority === key;
@@ -73,13 +73,13 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
                 onClick={() => setPriority(active ? null : key)}
                 style={{
                   flex: 1,
-                  padding: '6px 12px', borderRadius: 20,
+                  padding: '6px 0', borderRadius: 20,
                   fontSize: 12, fontWeight: 500,
-                  background: active ? pc.bg : theme.bgTertiary,
+                  background: active ? pc.bg : 'transparent',
                   color: active ? pc.text : theme.textSecondary,
                   border: `1px solid ${active ? pc.border : theme.border}`,
                   cursor: 'pointer', fontFamily: 'inherit',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                 }}>
                 <span style={{
                   width: 6, height: 6, borderRadius: '50%',
@@ -122,9 +122,9 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
         </div>
 
         <button type="submit" style={{
-          width: '100%', padding: '8px 14px', borderRadius: theme.radius.sm,
+          width: '100%', padding: '8px 0', borderRadius: 8,
           background: theme.accentBtn, color: theme.accentBtnText,
-          fontWeight: 600, fontSize: theme.font.body,
+          fontWeight: 500, fontSize: 13,
           border: 'none', cursor: 'pointer', fontFamily: 'inherit',
         }}>Add task</button>
       </form>
