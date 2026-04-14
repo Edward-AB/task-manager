@@ -3,7 +3,7 @@
 **Version:** 1.0
 **Date:** 2026-04-11
 **Application:** PineTask (React SPA)
-**Total Items:** 136
+**Total Items:** 171
 
 ---
 
@@ -251,10 +251,59 @@ Run through each row in sequence. Mark PASS / FAIL in a copy of this table. For 
 
 ---
 
-## 16. Cross-Browser (3 items)
+## 16. Teams (20 items)
 
 | # | Category | Test | Expected Result |
 |---|----------|------|-----------------|
-| 134 | Cross-Browser | Run full test plan in latest Google Chrome | All tests pass; no layout or rendering issues |
-| 135 | Cross-Browser | Run full test plan in latest Mozilla Firefox | All tests pass; no layout or rendering issues; CSS transitions and flexbox behave identically |
-| 136 | Cross-Browser | Run full test plan in latest Apple Safari | All tests pass; no layout or rendering issues; date inputs and scroll behaviour work correctly |
+| 134 | Teams | Navigate to `/teams` with no teams yet | EmptyTeams card displays with "Create your first team" CTA and a teams-intro illustration |
+| 135 | Teams | Create a new team with a name, description, and colour | Team appears in the TeamSelector; current user is listed as `owner` in the member list |
+| 136 | Teams | Attempt to create a team with an empty name | Submit button is disabled or form shows a validation error; no API POST is made |
+| 137 | Teams | From an existing team, click "Invite" and generate an invitation link | A share-able `/invite/:token` URL is produced and shown with a Copy button |
+| 138 | Teams | Open the invite link `/invite/:token` in a signed-out browser | Page loads publicly, shows team info; clicking "Accept" redirects to `/login?invite=:token` |
+| 139 | Teams | Open the invite link while signed in as a non-member | Page shows team name, inviter, member count, and Accept / Decline buttons |
+| 140 | Teams | Click "Accept" on a valid invite as a signed-in user | User is added as a member (role `member`); redirected to `/teams?selected=:id` |
+| 141 | Teams | Click "Decline" on a valid invite | Invitation is marked declined; redirected to `/dashboard` without joining |
+| 142 | Teams | Open an expired or already-used invite link | Page shows "Invitation unavailable" with an explanation |
+| 143 | Teams | As team owner, change a member's role from `member` to `admin` | Member's RoleBadge updates to "admin"; PATCH request is sent |
+| 144 | Teams | As team owner, remove a member from the team | Member disappears from the list; confirmation prompt appears before removal |
+| 145 | Teams | As non-owner member, verify role-change and remove actions are hidden | Role select and remove button do not render for a `member` viewing the list |
+| 146 | Teams | Leave a team as a non-owner member | Member is removed from the team; team disappears from selector; redirect to `/teams` empty state if it was the last team |
+| 147 | Teams | Attempt to leave a team as the sole owner | Action is blocked with a message like "Transfer ownership first"; team remains |
+| 148 | Teams | Delete a team as the owner (from Team Info card) | Team is removed; selector shows remaining teams; confirmation modal requires explicit confirm |
+| 149 | Teams | Assign a team to a project via ProjectTeamSection `+ Assign` button | Team appears in the assigned list; `/api/projects/:id/team` POST succeeds |
+| 150 | Teams | Unassign a team from a project (click the × on the assignment row) | Team is removed from the list; DELETE request succeeds |
+| 151 | Teams | Create a task with an assigned team via AddTaskForm's team select | Task is created, then `POST /api/tasks/:id/assign` runs; team pill appears on the task in TaskList |
+| 152 | Teams | Open `/teams/:id/schedule` as a team member | SchedulingAssistant loads the week view with shared members' tasks, respecting private-task privacy |
+| 153 | Teams | Drag-and-drop a task onto a time slot in the scheduling assistant | Task is scheduled (API PATCH on slot + date); view updates immediately |
+
+---
+
+## 17. Messaging (15 items)
+
+| # | Category | Test | Expected Result |
+|---|----------|------|-----------------|
+| 154 | Messaging | Click the Messages button in the header with no unread | Drawer slides in from the right (250ms ease); no badge on the button |
+| 155 | Messaging | Click the Messages button while unread messages exist | Badge shows unread total (capped at `9+`); drawer opens on click |
+| 156 | Messaging | With the drawer open, press `Escape` | Drawer closes via transform slide-out; backdrop fades out |
+| 157 | Messaging | Click a team-mate avatar in the ContactSidebar (no prior convo) | A new conversation is created and opened; ChatView shows "No messages yet. Say hi!" |
+| 158 | Messaging | Click an avatar that already has a conversation | Existing conversation opens; no duplicate is created |
+| 159 | Messaging | Type a message and press Enter in MessageInput | Message is appended optimistically; bubble shows at 70% opacity, then solid when the POST resolves |
+| 160 | Messaging | Force a network error on send (offline / blocked) | Message bubble shows "Failed to send" with a "Retry" link under the timestamp |
+| 161 | Messaging | Click the "Retry" link on a failed message | Bubble returns to optimistic state and re-POSTs; becomes permanent on success |
+| 162 | Messaging | Receive a new message while the drawer is open and conversation is active | New bubble appends within 5s (polling); list auto-scrolls to bottom if user was near bottom |
+| 163 | Messaging | Receive a new message while scrolled up | "New message ↓" floating button appears; clicking it scrolls to bottom |
+| 164 | Messaging | Receive a new message with the drawer closed | NewMessageToast slides in from the bottom-right, auto-dismisses after 4.5s; clicking opens the conversation |
+| 165 | Messaging | Open the drawer, collapse the conversation list using the chevron button | List hides; ChatView takes the full width of the drawer body |
+| 166 | Messaging | Scroll to the top of a long conversation | `onLoadMore` fires with `?before=:oldestId`; older messages prepend without scroll jump |
+| 167 | Messaging | Send a message containing a URL (e.g. `https://example.com`) | URL renders as an underlined link that opens in a new tab with `rel="noopener noreferrer"` |
+| 168 | Messaging | Send an emoji-only message (e.g. `🎉🎉`) | Bubble renders the emojis at 28 px font size with reduced padding (`4px 8px`) |
+
+---
+
+## 18. Cross-Browser (3 items)
+
+| # | Category | Test | Expected Result |
+|---|----------|------|-----------------|
+| 169 | Cross-Browser | Run full test plan in latest Google Chrome | All tests pass; no layout or rendering issues |
+| 170 | Cross-Browser | Run full test plan in latest Mozilla Firefox | All tests pass; no layout or rendering issues; CSS transitions and flexbox behave identically |
+| 171 | Cross-Browser | Run full test plan in latest Apple Safari | All tests pass; no layout or rendering issues; date inputs and scroll behaviour work correctly |
