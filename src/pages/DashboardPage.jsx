@@ -423,49 +423,48 @@ export default function DashboardPage() {
 
   // ── Wide (desktop) layout ──────────────────────────
   return (
-    <div style={{ flex: 1, minHeight: 0, padding: '14px 20px', overflow: 'hidden' }}>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '25% minmax(0,1fr) minmax(0,1fr)',
-        gap: 14,
+    <div style={{
+      flex: 1, minHeight: 0, padding: '14px 20px', overflow: 'hidden',
+      display: 'grid',
+      gridTemplateColumns: '25% minmax(0,1fr) minmax(0,1fr)',
+      gap: 14,
+    }}>
+      {/* Left column */}
+      <div className="col-scroll" style={{
+        display: 'flex', flexDirection: 'column', gap: 12,
+        overflowY: 'auto', paddingRight: 2, paddingBottom: 14, minHeight: 0,
       }}>
-        {/* Left column */}
-        <div className="col-scroll" style={{
-          display: 'flex', flexDirection: 'column', gap: 12,
-          overflowY: 'auto', paddingRight: 2, paddingBottom: 14, minHeight: 0,
+        {greetingCard}
+        <div style={{
+          background: theme.bgSecondary,
+          border: `0.5px solid ${theme.border}`,
+          borderRadius: theme.radius.md,
+          padding: 16,
+          display: 'flex',
+          flexDirection: 'column',
         }}>
-          {greetingCard}
+          {overviewCardEmbedded}
           <div style={{
-            background: theme.bgSecondary,
-            border: `0.5px solid ${theme.border}`,
-            borderRadius: theme.radius.md,
-            padding: 16,
-            display: 'flex',
-            flexDirection: 'column',
-          }}>
-            {overviewCardEmbedded}
-            <div style={{
-              height: '0.5px',
-              background: theme.hourRule || theme.border,
-              margin: '16px 0 14px 0',
-              flexShrink: 0,
-            }} />
-            {deadlineListEmbedded}
-          </div>
+            height: '0.5px',
+            background: theme.hourRule || theme.border,
+            margin: '16px 0 14px 0',
+            flexShrink: 0,
+          }} />
+          {deadlineListEmbedded}
         </div>
-
-        {/* Middle column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0, minHeight: 0 }}>
-          <div style={{ flexShrink: 0, marginBottom: 10 }}>
-            {addTaskForm}
-          </div>
-          {taskList}
-          {dayNoteCard}
-        </div>
-
-        {/* Right column */}
-        {daySchedule}
       </div>
+
+      {/* Middle column */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0, minHeight: 0 }}>
+        <div style={{ flexShrink: 0, marginBottom: 10 }}>
+          {addTaskForm}
+        </div>
+        {taskList}
+        {dayNoteCard}
+      </div>
+
+      {/* Right column */}
+      {daySchedule}
 
       {/* Modals and overlays */}
       {noteTask && (

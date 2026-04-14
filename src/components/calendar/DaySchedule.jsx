@@ -97,6 +97,14 @@ export default function DaySchedule({
     dragInfo.current = task;
     e.dataTransfer.setData('text/plain', task.id);
     e.dataTransfer.effectAllowed = 'move';
+    // v1: custom small drag ghost (lines 498-504)
+    const tc = getTaskColor(task, deadlines, theme);
+    const el = document.createElement('div');
+    el.style.cssText = `position:absolute;top:-999px;padding:4px 10px;background:${tc.bg};border:1px solid ${tc.border};border-radius:8px;font-size:12px;color:${tc.text};white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis;`;
+    el.textContent = task.text;
+    document.body.appendChild(el);
+    e.dataTransfer.setDragImage(el, 0, 0);
+    setTimeout(() => document.body.removeChild(el), 0);
   };
 
   return (
