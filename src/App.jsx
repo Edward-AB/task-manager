@@ -26,6 +26,9 @@ import HelpPage from './pages/HelpPage.jsx';
 import ChangelogPage from './pages/ChangelogPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import PricingPage from './pages/PricingPage.jsx';
+import TeamsPage from './pages/TeamsPage.jsx';
+import TeamSchedulePage from './pages/TeamSchedulePage.jsx';
+import InviteAcceptPage from './pages/InviteAcceptPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -40,6 +43,7 @@ export default function App() {
         <Route path="/reset-password/:token" element={<PageTransition><ResetConfirmPage /></PageTransition>} />
         <Route path="/verify-email/:token" element={<PageTransition><VerifyEmailPage /></PageTransition>} />
         <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
+        <Route path="/invite/:token" element={<PageTransition><InviteAcceptPage /></PageTransition>} />
       </Route>
 
       {/* Onboarding (auth required, minimal layout) */}
@@ -54,6 +58,8 @@ export default function App() {
         <Route path="/dashboard" element={<PageTransition><DashboardPage /></PageTransition>} />
         <Route path="/projects" element={<PageTransition><ProjectsPage /></PageTransition>} />
         <Route path="/projects/:id" element={<PageTransition><ProjectDetailPage /></PageTransition>} />
+        <Route path="/teams" element={<PageTransition><TeamsPage /></PageTransition>} />
+        <Route path="/teams/:id/schedule" element={<PageTransition><TeamSchedulePage /></PageTransition>} />
         <Route path="/analytics" element={<PageTransition><AnalyticsPage /></PageTransition>} />
         <Route path="/account" element={<PageTransition><AccountPage /></PageTransition>} />
         <Route path="/settings" element={<PageTransition><SettingsPage /></PageTransition>} />

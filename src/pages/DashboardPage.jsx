@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth.js';
 import { useNarrow } from '../hooks/useNarrow.js';
 import { useDate } from '../contexts/DateContext.jsx';
 import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts.js';
+import useTeams from '../hooks/useTeams.js';
 import { apiGet, apiPost, apiPatch, apiDelete, apiPut } from '../api/client.js';
 import { dateKey, todayKey, formatDate, getMonday, addDays } from '../utils/dates.js';
 import { playTick, playCelebration } from '../utils/sounds.js';
@@ -52,6 +53,7 @@ export default function DashboardPage() {
   const [noteTask, setNoteTask] = useState(null);
   const [celebrating, setCelebrating] = useState(false);
   const [celebratedKey, setCelebratedKey] = useState(null);
+  const { teams } = useTeams();
 
   // ── Keyboard shortcuts ────────────────────────────
   useKeyboardShortcuts({
@@ -133,13 +135,17 @@ export default function DashboardPage() {
   // ── Task actions ───────────────────────────────────
   const handleAddTask = async (taskData) => {
     try {
+      const { team_id: teamId, ...rest } = taskData;
       const res = await apiPost('/api/tasks', {
-        ...taskData,
+        ...rest,
         date: dk,
         duration: taskData.duration || DEFAULT_TASK_DURATION,
       });
       const newTask = normalizeTask(res?.data || res);
       setAllTasks((prev) => [...prev, newTask]);
+      if (teamId && newTask?.id) {
+        apiPost(`/api/tasks/${newTask.id}/assign`, { teamId }).catch(() => {});
+      }
     } catch (err) {
       console.error('Add task error:', err);
     }
@@ -366,6 +372,7 @@ export default function DashboardPage() {
       onAdd={handleAddTask}
       deadlines={deadlines}
       projects={projects}
+      teams={teams}
       inputRef={taskInputRef}
     />
   );

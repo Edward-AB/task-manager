@@ -10,6 +10,7 @@ import logoDark from '../../assets/logo-dark.png';
 import ProfileDropdown from './ProfileDropdown.jsx';
 import TimerPopup from '../timer/TimerPopup.jsx';
 import TimerAlarmModal from '../timer/TimerAlarmModal.jsx';
+import MessagingButton from '../messaging/MessagingButton.jsx';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: (
@@ -24,6 +25,13 @@ const NAV_ITEMS = [
     <svg width={14} height={14} viewBox="0 0 14 14" fill="none">
       <rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
       <path d="M1 5h12" stroke="currentColor" strokeWidth="1.3"/>
+    </svg>
+  )},
+  { to: '/teams', label: 'Teams', icon: (
+    <svg width={14} height={14} viewBox="0 0 14 14" fill="none">
+      <circle cx="5" cy="5" r="2.2" stroke="currentColor" strokeWidth="1.3"/>
+      <circle cx="10" cy="4.5" r="1.8" stroke="currentColor" strokeWidth="1.3"/>
+      <path d="M1.5 12c0-1.9 1.6-3.4 3.5-3.4s3.5 1.5 3.5 3.4M8.5 11.5c0-1.4 1.2-2.6 2.6-2.6s2.4 1.1 2.4 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
     </svg>
   )},
   { to: '/analytics', label: 'Analytics', icon: (
@@ -232,6 +240,8 @@ export default function Header({ onToggleSidebar, sidebarCollapsed }) {
           )}
           {timerDone && <TimerAlarmModal onRepeat={handleAlarmRepeat} onDismiss={handleAlarmDismiss} />}
         </div>
+
+        <MessagingButton />
 
         <button style={themeToggleBtn} onClick={toggleTheme} aria-label="Toggle theme"><ThemeIcon /></button>
 

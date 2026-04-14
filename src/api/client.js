@@ -94,9 +94,11 @@ export async function apiPut(path, data) {
   return body;
 }
 
-/** DELETE helper */
-export async function apiDelete(path) {
-  const res = await api(path, { method: 'DELETE' });
+/** DELETE helper (optional body) */
+export async function apiDelete(path, data) {
+  const opts = { method: 'DELETE' };
+  if (data !== undefined) opts.body = JSON.stringify(data);
+  const res = await api(path, opts);
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.error || `Request failed: ${res.status}`);
   return body;

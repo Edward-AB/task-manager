@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useTheme } from '../../hooks/useTheme.js';
 import TaskColorPicker from './TaskColorPicker.jsx';
 
-export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inputRef: externalRef }) {
+export default function AddTaskForm({ onAdd, deadlines = [], projects = [], teams = [], inputRef: externalRef }) {
   const { theme } = useTheme();
   const [text, setText] = useState('');
   const [priority, setPriority] = useState(null);
@@ -10,6 +10,7 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
   const [duration, setDuration] = useState(2);
   const [deadlineId, setDeadlineId] = useState('');
   const [projectId, setProjectId] = useState('');
+  const [teamId, setTeamId] = useState('');
   const internalRef = useRef(null);
   const inputRef = externalRef || internalRef;
 
@@ -19,10 +20,12 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
     onAdd({
       text: text.trim(), priority, color_id: colorId, duration,
       deadline_id: deadlineId || null, project_id: projectId || null,
+      team_id: teamId || null,
     });
     setText('');
     setPriority(null);
     setColorId('white');
+    setTeamId('');
     inputRef.current?.focus();
   };
 
@@ -120,6 +123,17 @@ export default function AddTaskForm({ onAdd, deadlines = [], projects = [], inpu
             </div>
           )}
         </div>
+
+        {teams.length > 0 && (
+          <div style={{ marginBottom: 10 }}>
+            <div style={fieldLabel}>Assign to team</div>
+            <select value={teamId} onChange={e => setTeamId(e.target.value)}
+              style={{ ...selectStyle, width: '100%' }}>
+              <option value="">None (personal task)</option>
+              {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+            </select>
+          </div>
+        )}
 
         <button type="submit" style={{
           width: '100%', padding: '8px 0', borderRadius: 8,

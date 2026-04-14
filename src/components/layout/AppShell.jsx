@@ -5,6 +5,8 @@ import { useNarrow } from '../../hooks/useNarrow.js';
 import { DateProvider } from '../../contexts/DateContext.jsx';
 import Header from './Header.jsx';
 import Sidebar, { COLLAPSED_WIDTH, EXPANDED_WIDTH } from './Sidebar.jsx';
+import MessagingPanel from '../messaging/MessagingPanel.jsx';
+import NewMessageToast from '../messaging/NewMessageToast.jsx';
 
 const SIDEBAR_KEY = 'pinetask_sidebar_collapsed';
 
@@ -54,6 +56,8 @@ export default function AppShell({ children }) {
           {!narrow && !sidebarCollapsed && <Sidebar collapsed={false} onToggle={toggleSidebar} />}
           <main style={mainStyle}>{children || <Outlet />}</main>
         </div>
+        <MessagingPanel />
+        <NewMessageToast />
       </div>
     </DateProvider>
   );

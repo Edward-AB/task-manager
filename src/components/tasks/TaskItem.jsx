@@ -174,6 +174,21 @@ export default function TaskItem({ task, deadlines = [], onToggle, onDelete, onN
                   background: dlC.bg, color: dlC.text, border: `0.5px solid ${dlC.border}`, whiteSpace: 'nowrap',
                 }}>{dl.title}</span>
               )}
+              {task.team && (
+                <span style={{
+                  fontSize: 9, padding: '1px 6px', borderRadius: 20,
+                  background: t.bgSecondary, color: t.textSecondary,
+                  border: `0.5px solid ${t.border}`,
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  whiteSpace: 'nowrap',
+                }}>
+                  <span style={{
+                    width: 5, height: 5, borderRadius: '50%',
+                    background: task.team.color || t.accent,
+                  }} />
+                  {task.team.name}
+                </span>
+              )}
             </div>
           </div>
         )}

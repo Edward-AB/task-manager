@@ -7,6 +7,7 @@ import ProjectSidebar from '../components/projects/ProjectSidebar.jsx';
 import ProjectDetail from '../components/projects/ProjectDetail.jsx';
 import ProjectAnalytics from '../components/projects/ProjectAnalytics.jsx';
 import GanttChart from '../components/projects/GanttChart.jsx';
+import ProjectTeamSection from '../components/projects/ProjectTeamSection.jsx';
 
 export default function ProjectDetailPage() {
   const { theme } = useTheme();
@@ -134,7 +135,10 @@ export default function ProjectDetailPage() {
 
       {tab === 'manage' ? (
         <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-          <ProjectSidebar project={project} deadlines={deadlines} />
+          <div style={{ width: 280, flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+            <ProjectSidebar project={project} deadlines={deadlines} />
+            <ProjectTeamSection projectId={id} />
+          </div>
           <ProjectDetail project={project} onRefresh={fetchProject} />
         </div>
       ) : (
