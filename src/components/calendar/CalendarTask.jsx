@@ -67,7 +67,7 @@ export default function CalendarTask({
         padding: '3px 6px',
         cursor: 'grab',
         display: 'flex',
-        alignItems: narrow ? 'flex-start' : 'center',
+        alignItems: 'center',
         gap: 3,
         overflow: 'hidden',
       }}
@@ -80,7 +80,7 @@ export default function CalendarTask({
         style={{
           width: 10, height: 10, flexShrink: 0,
           accentColor: pc.dot,
-          marginTop: narrow ? 2 : 0,
+          marginTop: 0,
         }}
       />
       {narrow ? (
@@ -147,8 +147,8 @@ export default function CalendarTask({
           background: 'none', border: 'none', cursor: 'pointer',
           color: tc.dot, fontSize: 10, padding: 0, lineHeight: 1,
           flexShrink: 0,
-          alignSelf: narrow ? 'flex-start' : 'center',
-          marginTop: narrow ? 1 : 0,
+          alignSelf: 'center',
+          marginTop: 0,
         }}
       >
         ↩
